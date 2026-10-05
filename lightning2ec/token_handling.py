@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 import requests
 from eumdac import AccessToken, DataStore
 
@@ -6,8 +7,15 @@ from eumdac import AccessToken, DataStore
 CREDENTIALS_FILE = Path(__file__).resolve().parent.parent / "credentials.txt"
 
 
-def _load_credentials(file_path=CREDENTIALS_FILE):
+def _load_credentials(file_path=None):
     """Read key-value pairs from a credentials file into a dictionary."""
+    creds = {key: os.environ[key] for key in (
+        "OFFLINE_TOKEN", "CLIENT_ID", "CLIENT_SECRET", "EUMETSAT_KEY", "EUMETSAT_SECRET"
+    ) if key in os.environ}
+    if creds:
+        return creds
+
+    file_path = Path(file_path or os.environ.get("LIGHTNING2EC_CREDENTIALS_FILE") or CREDENTIALS_FILE).expanduser()
     creds = {}
     if not file_path.exists():
         raise FileNotFoundError(f"Credentials file not found: {file_path}")

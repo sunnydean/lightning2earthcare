@@ -157,6 +157,7 @@ def run_date_range(
     lightning_platforms,
     distance_threshold_km: float,
     time_threshold_s: int,
+    item_ids=None,
 ):
     """
     Run the EarthCARE–Lightning collocation pipeline for a range of dates.
@@ -171,6 +172,8 @@ def run_date_range(
     """
 
     lightning_dir = Path(lightning_base_path)
+    (lightning_dir / "lightning_groups").mkdir(parents=True, exist_ok=True)
+    (lightning_dir / "track_counts").mkdir(parents=True, exist_ok=True)
 
     for current_date in iter_processing_days(start_date, end_date, log_dir):
         logger.info(f"Processing date: {current_date:%Y-%m-%d}")
@@ -181,6 +184,7 @@ def run_date_range(
                 frames=frames,
                 start_date=current_date,
                 end_date=current_date,
+                item_ids=item_ids,
             )
         except Exception as e:
             logger.error(f"STAC query failed for {current_date:%Y-%m-%d}: {e}")

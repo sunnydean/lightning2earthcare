@@ -1,4 +1,9 @@
+import sys
+
 import click
+
+from .create_storm_catalogue import main as create_storm_catalogue
+from .nc_to_parquet import main as post_process_nc_to_parquet
 
 from .runtime import configure_logging
 from .lightning_pipeline import run_date_range
@@ -29,6 +34,11 @@ from .lightning_pipeline import run_date_range
     type=click.DateTime(formats=['%Y-%m-%d']),
     required=True,
     help="End date (YYYY-MM-DD)"
+)
+@click.option(
+    '--stac-item-id', 'earthcare_item_ids',
+    multiple=True,
+    help="Limit the search to these EarthCARE STAC Item IDs; existing search filters still apply."
 )
 @click.option(
     '--product', 'products',
@@ -77,6 +87,7 @@ def run_pipeline(
     log_dir,
     start_date,
     end_date,
+    earthcare_item_ids,
     products,
     frames,
     half_window_minutes,
@@ -98,12 +109,23 @@ def run_pipeline(
         lightning_platforms=lightning_platforms,
         distance_threshold_km=distance_threshold_km,
         time_threshold_s=time_threshold_s,
+        item_ids=earthcare_item_ids,
     )
 
 
+@click.group()
 def main():
-    run_pipeline()
+    """Run lightning collocation, storm catalogue creation, and Parquet conversion."""
+
+
+main.add_command(run_pipeline, name='lightning2ec')
+main.add_command(create_storm_catalogue, name='create_storm_catalogue')
+main.add_command(post_process_nc_to_parquet, name='post_process_nc_to_parquet')
 
 
 if __name__ == "__main__":
-    main()
+    # Default to lightning2ec when no command name is supplied.
+    if len(sys.argv) == 1 or sys.argv[1].startswith('-'):
+        run_pipeline()
+    else:
+        main()

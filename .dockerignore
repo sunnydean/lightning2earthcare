@@ -1,0 +1,16 @@
+# Only send the files needed by the Dockerfile to the builder.
+**
+!Dockerfile
+!.dockerignore
+!pixi.toml
+!pixi.lock
+!lightning2ec/
+!lightning2ec/**
+
+# Exclude local state and secrets even inside the package directory.
+**/__pycache__/
+**/*.py[cod]
+**/credentials.txt
+**/.env
+**/.env.*
+**/*.log

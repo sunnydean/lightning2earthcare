@@ -39,11 +39,19 @@ Install the dependencies:
 pip install -r requirements.txt
 ```
 
+**Option 3: pixi installation**<br>
+With Pixi (locked environment):
+```bash
+pixi install --locked
+pixi run --locked cli --help
+```
+
 ## Credentials
 
 The pipeline requires credentials for EUMETSAT Data Store and ESA MAAP API.
 
 All credentials are stored in a `credentials.txt` file located **one directory above** the `lightning2ec` package.
+Set `LIGHTNING2EC_CREDENTIALS_FILE` to use another file - and alternatively pass the keys below as environment variables (env variables take precedence)
 
 ### Creating `credentials.txt`
 
@@ -100,4 +108,55 @@ python -m lightning2ec.cli \
     --start-date 2025-08-01 \
     --end-date 2025-09-30 \
     --lightning-platform MTG-I1
+```
+
+## Podman
+
+Build from the repository root:
+```bash
+podman build -t lightning2earthcare:local .
+mkdir -p results
+```
+
+### 1. Collocation
+
+Run a date range (using `credentials.txt`):
+```bash
+podman run --rm --init \
+    --env-file "credentials.txt" \
+    --mount "type=bind,source=$(pwd)/results,target=/data" \
+    lightning2earthcare:local \
+    --lightning-dir /data --log-dir /data/logs \
+    --start-date 2025-08-01 --end-date 2025-08-02
+```
+
+For specific Items, supply both MSI and CPR IDs; dates and existing search filters still apply:
+```bash
+podman run --rm --init \
+    --env-file "credentials.txt" \
+    --mount "type=bind,source=$(pwd)/results,target=/data" \
+    lightning2earthcare:local \
+    --lightning-dir /data --log-dir /data/logs \
+    --start-date 2025-07-31 --end-date 2025-07-31 \
+    --stac-item-id ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A \
+    --stac-item-id ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A
+```
+
+### 2. Create storm catalogue
+
+```bash
+podman run --rm --init \
+    --mount "type=bind,source=$(pwd)/results,target=/data" \
+    lightning2earthcare:local create_storm_catalogue \
+    --lightning-groups-dir /data/lightning_groups \
+    --track-counts-dir /data/track_counts --output /data/catalogue.json
+```
+
+### 3. Convert to Parquet
+
+```bash
+podman run --rm --init \
+    --mount "type=bind,source=$(pwd)/results,target=/data" \
+    lightning2earthcare:local post_process_nc_to_parquet \
+    --catalogue /data/catalogue.json --source-dir /data --output-dir /data/parquet
 ```

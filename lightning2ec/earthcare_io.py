@@ -33,6 +33,7 @@ def query_catalogue(
     end_date: date,
     collection_id=COLLECTION,
     catalog_url=CATALOG_URL,
+    item_ids=None,
 ):
     """
     Query ESA MAAP STAC catalogue for specified products, frames, and date range.
@@ -55,6 +56,7 @@ def query_catalogue(
     for bbox in bboxes:
         search = client.search(
             collections=[collection_id],
+            ids=item_ids or None,
             datetime=datetime_str,
             bbox=bbox,
             filter=combined_filter,
@@ -116,14 +118,17 @@ def find_ec_file_pairs(
     collection_id=COLLECTION,
     catalog_url=CATALOG_URL,
     asset_key=ASSET_KEY,
+    item_ids=None,
 ):
     """
     Build a dict mapping orbit_frame → {product_name: remote_asset_url}.
     Only includes orbits where all requested products are available.
+
+    Supplied Item IDs add a filter to the catalogue search.
     """
     items = query_catalogue(products, frames, start_date, end_date,
                             collection_id=collection_id,
-                            catalog_url=catalog_url)
+                            catalog_url=catalog_url, item_ids=item_ids)
 
     tmp = defaultdict(dict)
     for item in items:

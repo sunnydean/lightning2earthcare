@@ -6,6 +6,7 @@ and CPR track-count files.
 
 import json
 from pathlib import Path
+import click
 import numpy as np
 import pandas as pd
 import xarray as xr
@@ -22,9 +23,6 @@ EARTH_RADIUS_KM = 6371.0
 # USER PARAMETERS
 # ─────────────────────────────────────────────
 
-LI_DIR           = Path('/home/bpiskala/Object_Data/lightning_processing/lightning_groups_20240801_20260131')
-TRACK_COUNTS_DIR = Path('/home/bpiskala/Object_Data/lightning_processing/track_counts_20240801_20260131')
-
 distance_km  = 2.5
 time_s       = 150
 minute_span = 60
@@ -39,8 +37,8 @@ def _infer_source_from_filename(path_nc: Path) -> str:
     return 'GLM' if head == 'GLM' else 'LI'
 
 
-def _find_counts_sidecar_path(source: str, orbit_frame: str) -> Path | None:
-    matches = sorted(TRACK_COUNTS_DIR.glob(f"*{source}*{orbit_frame}*.nc"))
+def _find_counts_sidecar_path(source: str, orbit_frame: str, track_counts_dir: Path) -> Path | None:
+    matches = sorted(track_counts_dir.glob(f"*{source}*{orbit_frame}*.nc"))
     return matches[0] if matches else None
 
 
@@ -60,7 +58,7 @@ def _json_safe(obj):
 # CORE PROCESSING
 # ─────────────────────────────────────────────
 
-def process_one_file(path_nc: Path) -> pd.DataFrame:
+def process_one_file(path_nc: Path, track_counts_dir: Path) -> pd.DataFrame:
     """
     For each cluster defined in the sidecar counts file:
       1) Find peak CPR point by max per-cluster count.
@@ -70,7 +68,7 @@ def process_one_file(path_nc: Path) -> pd.DataFrame:
     orbit_frame = path_nc.name.split('_')[-1].replace('.nc', '')
     source = _infer_source_from_filename(path_nc)
 
-    counts_path = _find_counts_sidecar_path(source, orbit_frame)
+    counts_path = _find_counts_sidecar_path(source, orbit_frame, track_counts_dir)
     print(f'  Found counts sidecar: {counts_path.name if counts_path else "NONE"}')
     if not counts_path:
         return None
@@ -229,19 +227,27 @@ def process_one_file(path_nc: Path) -> pd.DataFrame:
 # MAIN
 # ─────────────────────────────────────────────
 
-def main():
+@click.command()
+@click.option('--lightning-groups-dir', required=True,
+              type=click.Path(exists=True, file_okay=False, path_type=Path))
+@click.option('--track-counts-dir', required=True,
+              type=click.Path(exists=True, file_okay=False, path_type=Path))
+@click.option('--output', 'out_file', default='catalogue.json', show_default=True,
+              type=click.Path(dir_okay=False, path_type=Path))
+def main(lightning_groups_dir, track_counts_dir, out_file):
+    """Create a storm catalogue from collocated lightning and CPR counts."""
 
     all_frames = []
 
-    for nc_path in sorted(list(LI_DIR.glob('LI_202*.nc')) + list(LI_DIR.glob('GLM_202*.nc'))):
+    for nc_path in sorted(list(lightning_groups_dir.glob('LI_202*.nc')) + list(lightning_groups_dir.glob('GLM_202*.nc'))):
         print(f'Processing {nc_path.name}')
-        df = process_one_file(nc_path)
+        df = process_one_file(nc_path, track_counts_dir)
         if df is not None and not df.empty:
             all_frames.append(df)
 
     if not all_frames:
         print("No storms found.")
-        return
+        all_frames.append(pd.DataFrame(columns=["earthcare_id", "parent_cluster_id", "cluster_id"]))
 
     catalogue = pd.concat(all_frames, ignore_index=True)
     catalogue = catalogue.sort_values(
@@ -290,7 +296,7 @@ def main():
         "data": catalogue.to_dict(orient="records")
     }
 
-    out_file = f"EarthCARE_lightning_storm_catalogue_20240801_20260131.json"
+    out_file.parent.mkdir(parents=True, exist_ok=True)
     with open(out_file, "w") as f:
         json.dump(output, f, indent=2, default=_json_safe)
 

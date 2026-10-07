@@ -3,7 +3,7 @@
 `lightning2ec` is a Python pipeline to collocate **EarthCARE MSI/CPR observations** with **satellite lightning detections** from **MTG-LI** and **GOES-GLM**.
 
 The pipeline processes a user-defined date range and automatically:
-- queries **EarthCARE MSI and CPR data** from the ESA MAAP STAC catalogue
+- reads a local EarthCARE STAC catalogue or queries **EarthCARE MSI and CPR data** from ESA MAAP
 - (down)loads **lightning observations**
 - performs spatial–temporal collocation
 - outputs matched datasets for further analysis
@@ -130,16 +130,25 @@ podman run --rm --init \
     --start-date 2025-08-01 --end-date 2025-08-02
 ```
 
-For specific Items, supply both MSI and CPR IDs; dates and existing search filters still apply:
+For selected EarthCARE products, first save their STAC metadata. The helper also accepts
+`--start-date` and `--end-date` instead of IDs:
+```bash
+pixi run --locked python -m cwl.helper_create_earthcare_catalog \
+    --item-id ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A \
+    --item-id ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A \
+    --frame A --output-dir cwl/earthcare
+```
+
+Pass that catalogue directory to the pipeline; dates and frame/product filters still apply:
 ```bash
 podman run --rm --init \
     --env-file "credentials.txt" \
     --mount "type=bind,source=$(pwd)/results,target=/data" \
+    --mount "type=bind,source=$(pwd)/cwl/earthcare,target=/earthcare,readonly" \
     lightning2earthcare:local \
     --lightning-dir /data --log-dir /data/logs \
     --start-date 2025-07-31 --end-date 2025-07-31 \
-    --stac-item-id ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A \
-    --stac-item-id ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A
+    --earthcare-catalog /earthcare
 ```
 
 ### 2. Create storm catalogue
@@ -160,3 +169,16 @@ podman run --rm --init \
     lightning2earthcare:local post_process_nc_to_parquet \
     --catalogue /data/catalogue.json --source-dir /data --output-dir /data/parquet
 ```
+
+### 4. Create STAC catalogue
+
+```bash
+podman run --rm --init \
+    --mount "type=bind,source=$(pwd)/results,target=/data" \
+    lightning2earthcare:local create_stac_catalogue \
+    --parquet-dir /data/parquet --source-dir /data --output-dir /data/stac
+```
+
+The output contains `catalog.json`, STAC metadata and copies of the referenced Parquet files.
+The CWL job uses `cwl/earthcare` as its input Directory and returns this STAC output Directory.
+The helper downloads metadata only; EarthCARE product files are read from their HTTPS URLs during processing.

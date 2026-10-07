@@ -157,13 +157,13 @@ def run_date_range(
     lightning_platforms,
     distance_threshold_km: float,
     time_threshold_s: int,
-    item_ids=None,
+    earthcare_catalog=None,
 ):
     """
     Run the EarthCARE–Lightning collocation pipeline for a range of dates.
 
     For each processing day the function:
-        1. Queries the EarthCARE STAC catalogue for matching orbit/frame pairs
+        1. Reads or queries the EarthCARE STAC catalogue for matching orbit/frame pairs
         2. Loads MSI data to obtain geolocation and time information
         3. Determines which lightning platforms cover the EarthCARE swath
         4. Runs the lightning processing pipeline for each selected source
@@ -184,7 +184,7 @@ def run_date_range(
                 frames=frames,
                 start_date=current_date,
                 end_date=current_date,
-                item_ids=item_ids,
+                earthcare_catalog=earthcare_catalog,
             )
         except Exception as e:
             logger.error(f"STAC query failed for {current_date:%Y-%m-%d}: {e}")

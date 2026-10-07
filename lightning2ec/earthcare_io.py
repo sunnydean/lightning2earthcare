@@ -1,11 +1,13 @@
 import logging
 import time
 from collections import defaultdict
-from datetime import date
+from datetime import date, datetime, time as day_time, timezone
+from pathlib import Path
 from typing import List
 import fsspec
 import xarray as xr
 from pystac_client import Client
+from pystac import Catalog
 
 from .token_handling import get_earthcare_token
 
@@ -41,7 +43,7 @@ def query_catalogue(
     """
     client = Client.open(catalog_url)
     datetime_str = [f"{start_date.strftime('%Y-%m-%dT00:00:00Z')}",
-            f"{end_date.strftime('%Y-%m-%dT23:59:59Z')}"]
+            f"{end_date.strftime('%Y-%m-%dT23:59:59Z')}"] if start_date and end_date else None
 
     # Build filter: (productType='X' OR productType='Y') AND (frame='A' OR frame='B')
     product_filter = " OR ".join([f"productType = '{p}'" for p in products])
@@ -118,17 +120,24 @@ def find_ec_file_pairs(
     collection_id=COLLECTION,
     catalog_url=CATALOG_URL,
     asset_key=ASSET_KEY,
-    item_ids=None,
+    earthcare_catalog=None,
 ):
     """
     Build a dict mapping orbit_frame → {product_name: remote_asset_url}.
     Only includes orbits where all requested products are available.
 
-    Supplied Item IDs add a filter to the catalogue search.
+    A supplied EarthCARE catalogue directory replaces the remote search.
     """
-    items = query_catalogue(products, frames, start_date, end_date,
-                            collection_id=collection_id,
-                            catalog_url=catalog_url, item_ids=item_ids)
+    if earthcare_catalog:
+        items = Catalog.from_file(str(Path(earthcare_catalog) / "catalog.json")).get_items(recursive=True)
+        start = datetime.combine(start_date, day_time.min, timezone.utc)
+        end = datetime.combine(end_date, day_time.max, timezone.utc)
+        items = [item for item in items
+                 if (item.common_metadata.start_datetime or item.datetime) <= end
+                 and (item.common_metadata.end_datetime or item.datetime) >= start]
+    else:
+        items = query_catalogue(products, frames, start_date, end_date,
+                                collection_id=collection_id, catalog_url=catalog_url)
 
     tmp = defaultdict(dict)
     for item in items:

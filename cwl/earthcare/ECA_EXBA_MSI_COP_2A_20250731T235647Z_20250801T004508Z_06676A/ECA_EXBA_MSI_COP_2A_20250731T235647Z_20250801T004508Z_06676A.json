@@ -1,0 +1,322 @@
+{
+  "type": "Feature",
+  "stac_version": "1.1.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/alternate-assets/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/authentication/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/storage/v2.0.0/schema.json",
+    "https://stac-extensions.github.io/file/v2.1.0/schema.json",
+    "https://stac-extensions.github.io/scientific/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/processing/v1.2.0/schema.json",
+    "https://eof-eos.io.esa.int/stac-extension/v0.1.0/schema.json",
+    "https://cs-si.github.io/eopf-stac-extension/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/sat/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/product/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/grid/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/timestamps/v1.1.0/schema.json"
+  ],
+  "id": "ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A",
+  "geometry": {
+    "coordinates": [
+      [
+        [
+          33.19721,
+          -22.426432
+        ],
+        [
+          32.168068,
+          -17.436026
+        ],
+        [
+          31.179197,
+          -12.438778
+        ],
+        [
+          30.218176,
+          -7.436309
+        ],
+        [
+          29.274317,
+          -2.43021
+        ],
+        [
+          28.337921,
+          2.577943
+        ],
+        [
+          27.399664,
+          7.586575
+        ],
+        [
+          26.450027,
+          12.594114
+        ],
+        [
+          25.478699,
+          17.598984
+        ],
+        [
+          24.473862,
+          22.599592
+        ],
+        [
+          24.087894,
+          22.530773
+        ],
+        [
+          22.919918,
+          22.316462
+        ],
+        [
+          23.97338,
+          17.320051
+        ],
+        [
+          24.978962,
+          12.318171
+        ],
+        [
+          25.949812,
+          7.312613
+        ],
+        [
+          26.89705,
+          2.305083
+        ],
+        [
+          27.830563,
+          -2.702774
+        ],
+        [
+          28.759626,
+          -7.70937
+        ],
+        [
+          29.693483,
+          -12.713163
+        ],
+        [
+          30.641907,
+          -17.712662
+        ],
+        [
+          31.61586,
+          -22.706413
+        ],
+        [
+          32.80564,
+          -22.497314
+        ],
+        [
+          33.19721,
+          -22.426432
+        ]
+      ]
+    ],
+    "type": "Polygon"
+  },
+  "bbox": [
+    22.919918,
+    -22.706413,
+    33.19721,
+    22.599592
+  ],
+  "properties": {
+    "start_datetime": "2025-07-31T23:56:47.000Z",
+    "end_datetime": "2025-08-01T00:08:23.000Z",
+    "processing:facility": "PDGS-CPFxx",
+    "product:type": "MSI_COP_2A",
+    "sat:anx_datetime": "2025-07-31T22:30:02.072Z",
+    "title": "ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A",
+    "platform": "EarthCARE",
+    "datetime": "2025-07-31T23:56:47Z",
+    "instruments": [
+      "MSI"
+    ],
+    "constellation": "EarthCARE",
+    "sat:orbit_state": "ascending",
+    "storage:schemes": {
+      "earthcare-pdgs-01": {
+        "bucket": "earthcare-pdgs-01",
+        "description": "This endpoint provides access to EO data which is stored on the object storage of the ESA MAAP. See the [documentation](https://portal.maap.eo.esa.int/dataaccess/) for more information, including how to get credentials.",
+        "type": "custom-s3",
+        "title": "ESA MAAP S3",
+        "region": "gra",
+        "platform": "https://{bucket}.s3.{region}.io.cloud.ovh.net"
+      }
+    },
+    "processing:software": {
+      "M-CLD": "11.30"
+    },
+    "grid:code": "WRS-6676-A",
+    "processing:level": "L2A",
+    "sci:doi": "10.57780/eca-94b4e53",
+    "created": "2025-08-01T00:45:08.000Z",
+    "published": "2025-11-19T21:48:23.022Z",
+    "version": "BA",
+    "auth:schemes": {
+      "s3": {
+        "type": "s3"
+      },
+      "oidc": {
+        "openIdConnectUrl": "https://iam.ascend.icsgate.eu/realms/esa-maap/.well-known/openid-configuration",
+        "type": "openIdConnect"
+      }
+    },
+    "processing:datetime": "2025-08-01T00:45:08.000Z",
+    "eofeos:mission_phase": "Routine",
+    "eopf:instrument_mode": "DEFAULT",
+    "updated": "2026-05-18T02:20:16Z",
+    "sat:absolute_orbit": 6676,
+    "product:acquisition_type": "other"
+  },
+  "links": [
+    {
+      "rel": "collection",
+      "href": "https://catalog.maap.eo.esa.int/catalogue/collections/EarthCAREL2Validated_MAAP",
+      "type": "application/json",
+      "title": "EarthCAREL2Validated_MAAP"
+    },
+    {
+      "rel": "alternate",
+      "href": "https://catalog.maap.eo.esa.int/catalogue/collections/EarthCAREL2Validated_MAAP/items/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A?httpAccept=application/ld%2Bjson;profile=https://schema.org",
+      "type": "application/ld+json;profile=\"https://schema.org\"",
+      "title": "JSON-LD (schema.org) metadata"
+    },
+    {
+      "rel": "alternate",
+      "href": "https://catalog.maap.eo.esa.int/catalogue/collections/EarthCAREL2Validated_MAAP/items/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A?httpAccept=application/ld%2Bjson",
+      "type": "application/ld+json;profile=\"http://data.europa.eu/930/\"",
+      "title": "JSON-LD (GeoDCAT-AP) metadata"
+    },
+    {
+      "rel": "cite-as",
+      "href": "https://doi.org/10.57780/eca-94b4e53",
+      "type": "text/html",
+      "title": "Landing page"
+    },
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "parent",
+      "href": "../catalog.json",
+      "type": "application/json"
+    }
+  ],
+  "assets": {
+    "thumbnail": {
+      "href": "https://catalog.maap.eo.esa.int/data/earthcare-pdgs-01/EarthCARE/MSI_COP_2A/BA/2025/07/31/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A/public/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A.BID_1.jpeg",
+      "type": "image/jpeg",
+      "title": "ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A.BID_1.jpeg",
+      "roles": [
+        "thumbnail"
+      ]
+    },
+    "product": {
+      "href": "https://catalog.maap.eo.esa.int/data/zipper/earthcare-pdgs-01/EarthCARE/MSI_COP_2A/BA/2025/07/31/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A",
+      "type": "application/zip",
+      "title": "Zipped product",
+      "file:local_path": "ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A.ZIP",
+      "alternate:name": "HTTPS",
+      "auth:refs": [
+        "oidc"
+      ],
+      "published": "2025-08-01T00:08:23.000Z",
+      "roles": [
+        "data",
+        "metadata",
+        "archive"
+      ]
+    },
+    "metadata_ogc_10_157r4": {
+      "href": "https://catalog.maap.eo.esa.int/catalogue/collections/EarthCAREL2Validated_MAAP/items/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A?httpAccept=application/gml%2Bxml&recordSchema=om",
+      "type": "application/gml+xml;profile=\"http://www.opengis.net/spec/EOMPOM/1.1\"",
+      "title": "OGC 10-157r4 metadata",
+      "roles": [
+        "metadata"
+      ]
+    },
+    "enclosure_h5": {
+      "href": "https://catalog.maap.eo.esa.int/data/earthcare-pdgs-01/EarthCARE/MSI_COP_2A/BA/2025/07/31/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A.h5",
+      "type": "application/x-hdf5",
+      "title": "ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A.h5",
+      "file:local_path": "ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A.h5",
+      "alternate:name": "HTTPS",
+      "created": "2025-08-01T00:45:08.000Z",
+      "alternate": {
+        "s3": {
+          "alternate:name": "S3",
+          "href": "s3://earthcare-pdgs-01/EarthCARE/MSI_COP_2A/BA/2025/07/31/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A.h5",
+          "auth:refs": [
+            "s3"
+          ],
+          "storage:refs": [
+            "earthcare-pdgs-01"
+          ]
+        }
+      },
+      "auth:refs": [
+        "oidc"
+      ],
+      "file:size": 101752331,
+      "roles": [
+        "data"
+      ]
+    },
+    "metadata_ogc_17_003r2": {
+      "href": "https://catalog.maap.eo.esa.int/catalogue/collections/EarthCAREL2Validated_MAAP/items/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A?mode=owc",
+      "type": "application/geo+json;profile=\"http://www.opengis.net/spec/eo-geojson/1.0\"",
+      "title": "OGC 17-003r2 metadata",
+      "roles": [
+        "metadata"
+      ]
+    },
+    "metadata_iso_19139": {
+      "href": "https://catalog.maap.eo.esa.int/catalogue/collections/EarthCAREL2Validated_MAAP/items/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A?httpAccept=application/vnd.iso.19139%2Bxml",
+      "type": "application/vnd.iso.19139+xml",
+      "title": "ISO 19139 metadata",
+      "roles": [
+        "metadata"
+      ]
+    },
+    "quicklook_jpeg": {
+      "href": "https://catalog.maap.eo.esa.int/data/earthcare-pdgs-01/EarthCARE/MSI_COP_2A/BA/2025/07/31/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A/public/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A.BID_1.jpeg",
+      "type": "image/jpeg",
+      "title": "ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A.BID_1.jpeg",
+      "roles": [
+        "overview"
+      ]
+    },
+    "enclosure_hdr": {
+      "href": "https://catalog.maap.eo.esa.int/data/earthcare-pdgs-01/EarthCARE/MSI_COP_2A/BA/2025/07/31/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A.HDR",
+      "type": "image/vnd.radiance",
+      "title": "ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A.HDR",
+      "file:local_path": "ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A.HDR",
+      "alternate:name": "HTTPS",
+      "created": "2025-08-01T00:45:08.000Z",
+      "alternate": {
+        "s3": {
+          "alternate:name": "S3",
+          "href": "s3://earthcare-pdgs-01/EarthCARE/MSI_COP_2A/BA/2025/07/31/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A.HDR",
+          "auth:refs": [
+            "s3"
+          ],
+          "storage:refs": [
+            "earthcare-pdgs-01"
+          ]
+        }
+      },
+      "auth:refs": [
+        "oidc"
+      ],
+      "file:size": 24878,
+      "roles": [
+        "data"
+      ]
+    }
+  },
+  "collection": "EarthCAREL2Validated_MAAP"
+}

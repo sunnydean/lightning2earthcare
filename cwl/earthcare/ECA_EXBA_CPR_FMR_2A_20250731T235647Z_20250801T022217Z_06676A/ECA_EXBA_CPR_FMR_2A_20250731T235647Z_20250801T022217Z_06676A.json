@@ -1,0 +1,268 @@
+{
+  "type": "Feature",
+  "stac_version": "1.1.0",
+  "stac_extensions": [
+    "https://stac-extensions.github.io/alternate-assets/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/authentication/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/storage/v2.0.0/schema.json",
+    "https://stac-extensions.github.io/file/v2.1.0/schema.json",
+    "https://stac-extensions.github.io/scientific/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/processing/v1.2.0/schema.json",
+    "https://eof-eos.io.esa.int/stac-extension/v0.1.0/schema.json",
+    "https://cs-si.github.io/eopf-stac-extension/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/sat/v1.2.0/schema.json",
+    "https://stac-extensions.github.io/product/v1.0.0/schema.json",
+    "https://stac-extensions.github.io/grid/v1.1.0/schema.json",
+    "https://stac-extensions.github.io/timestamps/v1.1.0/schema.json"
+  ],
+  "id": "ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A",
+  "geometry": {
+    "coordinates": [
+      [
+        32.804237,
+        -22.486662
+      ],
+      [
+        31.788698,
+        -17.495
+      ],
+      [
+        30.809769,
+        -12.496794
+      ],
+      [
+        29.855389,
+        -7.493615
+      ],
+      [
+        28.915089,
+        -2.487023
+      ],
+      [
+        27.97928,
+        2.521419
+      ],
+      [
+        27.038647,
+        7.530135
+      ],
+      [
+        26.083567,
+        12.537542
+      ],
+      [
+        25.103521,
+        17.542036
+      ],
+      [
+        24.08635,
+        22.541985
+      ]
+    ],
+    "type": "LineString"
+  },
+  "bbox": [
+    24.08635,
+    -22.486662,
+    32.804237,
+    22.541985
+  ],
+  "properties": {
+    "start_datetime": "2025-07-31T23:56:47.000Z",
+    "end_datetime": "2025-08-01T00:08:23.000Z",
+    "processing:facility": "PDGS-CPFxx",
+    "product:type": "CPR_FMR_2A",
+    "sat:anx_datetime": "2025-07-31T22:30:02.072Z",
+    "title": "ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A",
+    "platform": "EarthCARE",
+    "datetime": "2025-07-31T23:56:47Z",
+    "instruments": [
+      "CPR"
+    ],
+    "constellation": "EarthCARE",
+    "sat:orbit_state": "ascending",
+    "storage:schemes": {
+      "earthcare-pdgs-01": {
+        "bucket": "earthcare-pdgs-01",
+        "description": "This endpoint provides access to EO data which is stored on the object storage of the ESA MAAP. See the [documentation](https://portal.maap.eo.esa.int/dataaccess/) for more information, including how to get credentials.",
+        "type": "custom-s3",
+        "title": "ESA MAAP S3",
+        "region": "gra",
+        "platform": "https://{bucket}.s3.{region}.io.cloud.ovh.net"
+      }
+    },
+    "processing:software": {
+      "C-PRO": "11.51"
+    },
+    "grid:code": "WRS-6676-A",
+    "processing:level": "L2A",
+    "sci:doi": "10.57780/eca-c094213",
+    "created": "2025-08-01T02:22:17.000Z",
+    "published": "2025-11-20T12:01:12.032Z",
+    "version": "BA",
+    "auth:schemes": {
+      "s3": {
+        "type": "s3"
+      },
+      "oidc": {
+        "openIdConnectUrl": "https://iam.ascend.icsgate.eu/realms/esa-maap/.well-known/openid-configuration",
+        "type": "openIdConnect"
+      }
+    },
+    "processing:datetime": "2025-08-01T02:22:17.000Z",
+    "eofeos:mission_phase": "Routine",
+    "eopf:instrument_mode": "DEFAULT",
+    "updated": "2026-05-18T05:47:01Z",
+    "sat:absolute_orbit": 6676,
+    "product:acquisition_type": "other"
+  },
+  "links": [
+    {
+      "rel": "collection",
+      "href": "https://catalog.maap.eo.esa.int/catalogue/collections/EarthCAREL2Validated_MAAP",
+      "type": "application/json",
+      "title": "EarthCAREL2Validated_MAAP"
+    },
+    {
+      "rel": "alternate",
+      "href": "https://catalog.maap.eo.esa.int/catalogue/collections/EarthCAREL2Validated_MAAP/items/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A?httpAccept=application/ld%2Bjson;profile=https://schema.org",
+      "type": "application/ld+json;profile=\"https://schema.org\"",
+      "title": "JSON-LD (schema.org) metadata"
+    },
+    {
+      "rel": "alternate",
+      "href": "https://catalog.maap.eo.esa.int/catalogue/collections/EarthCAREL2Validated_MAAP/items/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A?httpAccept=application/ld%2Bjson",
+      "type": "application/ld+json;profile=\"http://data.europa.eu/930/\"",
+      "title": "JSON-LD (GeoDCAT-AP) metadata"
+    },
+    {
+      "rel": "cite-as",
+      "href": "https://doi.org/10.57780/eca-c094213",
+      "type": "text/html",
+      "title": "Landing page"
+    },
+    {
+      "rel": "root",
+      "href": "../catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "parent",
+      "href": "../catalog.json",
+      "type": "application/json"
+    }
+  ],
+  "assets": {
+    "thumbnail": {
+      "href": "https://catalog.maap.eo.esa.int/data/earthcare-pdgs-01/EarthCARE/CPR_FMR_2A/BA/2025/07/31/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A/public/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A.BID.jpeg",
+      "type": "image/jpeg",
+      "title": "ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A.BID.jpeg",
+      "roles": [
+        "thumbnail"
+      ]
+    },
+    "product": {
+      "href": "https://catalog.maap.eo.esa.int/data/zipper/earthcare-pdgs-01/EarthCARE/CPR_FMR_2A/BA/2025/07/31/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A",
+      "type": "application/zip",
+      "title": "Zipped product",
+      "file:local_path": "ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A.ZIP",
+      "alternate:name": "HTTPS",
+      "auth:refs": [
+        "oidc"
+      ],
+      "published": "2025-08-01T00:08:23.000Z",
+      "roles": [
+        "data",
+        "metadata",
+        "archive"
+      ]
+    },
+    "metadata_ogc_10_157r4": {
+      "href": "https://catalog.maap.eo.esa.int/catalogue/collections/EarthCAREL2Validated_MAAP/items/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A?httpAccept=application/gml%2Bxml&recordSchema=om",
+      "type": "application/gml+xml;profile=\"http://www.opengis.net/spec/EOMPOM/1.1\"",
+      "title": "OGC 10-157r4 metadata",
+      "roles": [
+        "metadata"
+      ]
+    },
+    "enclosure_h5": {
+      "href": "https://catalog.maap.eo.esa.int/data/earthcare-pdgs-01/EarthCARE/CPR_FMR_2A/BA/2025/07/31/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A.h5",
+      "type": "application/x-hdf5",
+      "title": "ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A.h5",
+      "file:local_path": "ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A.h5",
+      "alternate:name": "HTTPS",
+      "created": "2025-08-01T02:22:17.000Z",
+      "alternate": {
+        "s3": {
+          "alternate:name": "S3",
+          "href": "s3://earthcare-pdgs-01/EarthCARE/CPR_FMR_2A/BA/2025/07/31/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A.h5",
+          "auth:refs": [
+            "s3"
+          ],
+          "storage:refs": [
+            "earthcare-pdgs-01"
+          ]
+        }
+      },
+      "auth:refs": [
+        "oidc"
+      ],
+      "file:size": 4978318,
+      "roles": [
+        "data"
+      ]
+    },
+    "metadata_ogc_17_003r2": {
+      "href": "https://catalog.maap.eo.esa.int/catalogue/collections/EarthCAREL2Validated_MAAP/items/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A?mode=owc",
+      "type": "application/geo+json;profile=\"http://www.opengis.net/spec/eo-geojson/1.0\"",
+      "title": "OGC 17-003r2 metadata",
+      "roles": [
+        "metadata"
+      ]
+    },
+    "metadata_iso_19139": {
+      "href": "https://catalog.maap.eo.esa.int/catalogue/collections/EarthCAREL2Validated_MAAP/items/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A?httpAccept=application/vnd.iso.19139%2Bxml",
+      "type": "application/vnd.iso.19139+xml",
+      "title": "ISO 19139 metadata",
+      "roles": [
+        "metadata"
+      ]
+    },
+    "quicklook_jpeg": {
+      "href": "https://catalog.maap.eo.esa.int/data/earthcare-pdgs-01/EarthCARE/CPR_FMR_2A/BA/2025/07/31/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A/public/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A.BID.jpeg",
+      "type": "image/jpeg",
+      "title": "ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A.BID.jpeg",
+      "roles": [
+        "overview"
+      ]
+    },
+    "enclosure_hdr": {
+      "href": "https://catalog.maap.eo.esa.int/data/earthcare-pdgs-01/EarthCARE/CPR_FMR_2A/BA/2025/07/31/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A.HDR",
+      "type": "image/vnd.radiance",
+      "title": "ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A.HDR",
+      "file:local_path": "ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A.HDR",
+      "alternate:name": "HTTPS",
+      "created": "2025-08-01T02:22:17.000Z",
+      "alternate": {
+        "s3": {
+          "alternate:name": "S3",
+          "href": "s3://earthcare-pdgs-01/EarthCARE/CPR_FMR_2A/BA/2025/07/31/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A.HDR",
+          "auth:refs": [
+            "s3"
+          ],
+          "storage:refs": [
+            "earthcare-pdgs-01"
+          ]
+        }
+      },
+      "auth:refs": [
+        "oidc"
+      ],
+      "file:size": 10080,
+      "roles": [
+        "data"
+      ]
+    }
+  },
+  "collection": "EarthCAREL2Validated_MAAP"
+}

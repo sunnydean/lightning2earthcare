@@ -1,0 +1,12 @@
+start_date: "2025-07-31"
+end_date: "2025-07-31"
+credentials:
+  class: File
+  path: ../credentials.txt
+lightning_platforms: [MTG-I1]
+frames: [A]
+half_window: 10
+
+earthcare_catalog:
+  class: Directory
+  path: earthcare

@@ -1,0 +1,23 @@
+{
+  "type": "Catalog",
+  "id": "earthcare-inputs",
+  "stac_version": "1.1.0",
+  "description": "EarthCARE MSI and CPR input products.",
+  "links": [
+    {
+      "rel": "root",
+      "href": "./catalog.json",
+      "type": "application/json"
+    },
+    {
+      "rel": "item",
+      "href": "./ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A/ECA_EXBA_MSI_COP_2A_20250731T235647Z_20250801T004508Z_06676A.json",
+      "type": "application/geo+json"
+    },
+    {
+      "rel": "item",
+      "href": "./ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A/ECA_EXBA_CPR_FMR_2A_20250731T235647Z_20250801T022217Z_06676A.json",
+      "type": "application/geo+json"
+    }
+  ]
+}

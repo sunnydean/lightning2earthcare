@@ -1,0 +1,255 @@
+{
+  "source": {
+    "notebook": "https://github.com/sunnydean/gen-ogc-apppackage/blob/main/generate.ipynb",
+    "cell_id": "semantic-cluster-view",
+    "notebook_sha256": "b467162176025dba6a6d9dc7e8555363446a0bdd0325a7998cc687ea79607b29",
+    "repository": "https://github.com/sunnydean/lightning2earthcare",
+    "commit": "a36cbda325920ee78575390df12ea110a8053c54",
+    "saved_run_date": "2026-10-12",
+    "model": "gemini-flash-latest"
+  },
+  "analysis": {
+    "function_count": 56,
+    "connection_count": 58,
+    "clustering": "AgglomerativeClustering",
+    "distance_threshold": 4.0,
+    "separate_entrypoints": true
+  },
+  "clusters": [
+    {
+      "id": "cluster_1",
+      "label": "CLI root entrypoint",
+      "purpose": "Define the top-level Click group command for the Lightning2EarthCARE pipeline CLI.",
+      "commands": [],
+      "used_by": [],
+      "members": [
+        "lightning2ec.cli.main"
+      ]
+    },
+    {
+      "id": "cluster_2",
+      "label": "Pipeline CLI command",
+      "purpose": "Parse command-line arguments and run the EarthCARE-lightning collocation pipeline over a date range.",
+      "commands": [
+        "lightning2ec"
+      ],
+      "used_by": [
+        "lightning2ec"
+      ],
+      "members": [
+        "lightning2ec.cli.run_pipeline"
+      ]
+    },
+    {
+      "id": "cluster_3",
+      "label": "Lightning data collocation processing",
+      "purpose": "Retrieve, cluster, parallax-correct, collocate, and output matched lightning observations and CPR track summaries.",
+      "commands": [],
+      "used_by": [
+        "lightning2ec"
+      ],
+      "members": [
+        "lightning2ec.clustering._filter_by_quality",
+        "lightning2ec.clustering.parent_clustering",
+        "lightning2ec.clustering.subclustering",
+        "lightning2ec.collocation.collocate_glm_to_ec",
+        "lightning2ec.collocation.collocate_li_to_ec",
+        "lightning2ec.collocation.summarize_vs_cpr",
+        "lightning2ec.earthcare_io.fetch_earthcare_data",
+        "lightning2ec.lightning_io._get_datastore",
+        "lightning2ec.lightning_io._iter_hours",
+        "lightning2ec.lightning_io._parse_glm_timefield",
+        "lightning2ec.lightning_io._to_datetime",
+        "lightning2ec.lightning_io.download_li",
+        "lightning2ec.lightning_io.load_merge_glm",
+        "lightning2ec.lightning_pipeline.process_one_source",
+        "lightning2ec.parallax._get_parallax_shift_xyz",
+        "lightning2ec.parallax._get_satellite_elevation",
+        "lightning2ec.parallax._get_slant_cloud_distance",
+        "lightning2ec.parallax.apply_parallax",
+        "lightning2ec.preprocessing._interpolate_cth",
+        "lightning2ec.preprocessing.buffer_lightning_data",
+        "lightning2ec.preprocessing.merge_li_datasets",
+        "lightning2ec.preprocessing.prepare_ec",
+        "lightning2ec.token_handling._load_credentials",
+        "lightning2ec.token_handling.get_earthcare_token",
+        "lightning2ec.token_handling.get_eumetsat_token",
+        "lightning2ec.writers.lightning_output_path",
+        "lightning2ec.writers.track_output_path",
+        "lightning2ec.writers.write_lightning_netcdf",
+        "lightning2ec.writers.write_track_netcdf"
+      ]
+    },
+    {
+      "id": "cluster_4",
+      "label": "Storm catalogue file processor",
+      "purpose": "Extract lightning storm properties and along-track statistics from collocated NetCDF files.",
+      "commands": [],
+      "used_by": [
+        "create_storm_catalogue"
+      ],
+      "members": [
+        "lightning2ec.create_storm_catalogue._find_counts_sidecar_path",
+        "lightning2ec.create_storm_catalogue._infer_source_from_filename",
+        "lightning2ec.create_storm_catalogue.process_one_file"
+      ]
+    },
+    {
+      "id": "cluster_5",
+      "label": "Create storm catalogue CLI",
+      "purpose": "Aggregate collocated lightning and CPR counts across all files into a unified JSON storm catalogue.",
+      "commands": [
+        "create_storm_catalogue"
+      ],
+      "used_by": [
+        "create_storm_catalogue"
+      ],
+      "members": [
+        "lightning2ec.create_storm_catalogue.main"
+      ]
+    },
+    {
+      "id": "cluster_6",
+      "label": "Collocation runtime orchestration",
+      "purpose": "Orchestrate pipeline execution over date ranges, catalog lookups, source selection, and logging context.",
+      "commands": [],
+      "used_by": [
+        "lightning2ec"
+      ],
+      "members": [
+        "lightning2ec.earthcare_io._parse_orbit_frame_from_id",
+        "lightning2ec.earthcare_io.find_ec_file_pairs",
+        "lightning2ec.earthcare_io.query_catalogue",
+        "lightning2ec.lightning_pipeline.run_date_range",
+        "lightning2ec.runtime._add_if_platform_allowed",
+        "lightning2ec.runtime._ec_time_window",
+        "lightning2ec.runtime._glm_east_platform",
+        "lightning2ec.runtime._in_lon_ranges",
+        "lightning2ec.runtime._set_log_day",
+        "lightning2ec.runtime._set_monthly_log_file",
+        "lightning2ec.runtime.choose_lightning_sources",
+        "lightning2ec.runtime.configure_logging",
+        "lightning2ec.runtime.iter_processing_days"
+      ]
+    },
+    {
+      "id": "cluster_7",
+      "label": "NetCDF and JSON to Parquet conversion",
+      "purpose": "Transform collocated NetCDF files and storm catalogue JSON into structured GeoParquet dataframes.",
+      "commands": [],
+      "used_by": [
+        "post_process_nc_to_parquet"
+      ],
+      "members": [
+        "lightning2ec.nc_to_parquet.convert_nc_to_parquet",
+        "lightning2ec.nc_to_parquet.process_col2_nc_to_geoparquet",
+        "lightning2ec.nc_to_parquet.transform_json_to_parquet",
+        "lightning2ec.nc_to_parquet.yield_files_by_month"
+      ]
+    },
+    {
+      "id": "cluster_8",
+      "label": "Parquet postprocessing CLI",
+      "purpose": "Execute CLI conversion of collocated NetCDFs and storm catalogue to GeoParquet files.",
+      "commands": [
+        "post_process_nc_to_parquet"
+      ],
+      "used_by": [
+        "post_process_nc_to_parquet"
+      ],
+      "members": [
+        "lightning2ec.nc_to_parquet.main"
+      ]
+    },
+    {
+      "id": "cluster_9",
+      "label": "STAC item generation helpers",
+      "purpose": "Extract NetCDF metadata and create STAC item records from Parquet dataset files.",
+      "commands": [],
+      "used_by": [
+        "create_stac_catalogue"
+      ],
+      "members": [
+        "lightning2ec.stac_gen._add_parquet_item",
+        "lightning2ec.stac_gen._variable_metadata"
+      ]
+    },
+    {
+      "id": "cluster_10",
+      "label": "STAC catalogue generation CLI",
+      "purpose": "Generate a self-contained STAC catalogue organizing generated Parquet dataset collections.",
+      "commands": [
+        "create_stac_catalogue"
+      ],
+      "used_by": [
+        "create_stac_catalogue"
+      ],
+      "members": [
+        "lightning2ec.stac_gen.main"
+      ]
+    }
+  ],
+  "inferred_artifact_connections": [
+    {
+      "source": "lightning2ec",
+      "source_output": "lightning_groups_dir",
+      "target": "create_storm_catalogue",
+      "target_input": "lightning_groups_dir",
+      "artifact": "lightning_groups"
+    },
+    {
+      "source": "lightning2ec",
+      "source_output": "track_counts_dir",
+      "target": "create_storm_catalogue",
+      "target_input": "track_counts_dir",
+      "artifact": "track_counts"
+    },
+    {
+      "source": "create_storm_catalogue",
+      "source_output": "catalogue",
+      "target": "post_process_nc_to_parquet",
+      "target_input": "catalogue",
+      "artifact": "catalogue.json"
+    },
+    {
+      "source": "lightning2ec",
+      "source_output": "collocation_dir",
+      "target": "post_process_nc_to_parquet",
+      "target_input": "source_dir",
+      "artifact": "collocation_data"
+    },
+    {
+      "source": "post_process_nc_to_parquet",
+      "source_output": "parquet_dir",
+      "target": "create_stac_catalogue",
+      "target_input": "parquet_dir",
+      "artifact": "parquet_data"
+    },
+    {
+      "source": "lightning2ec",
+      "source_output": "collocation_dir",
+      "target": "create_stac_catalogue",
+      "target_input": "source_dir",
+      "artifact": "collocation_data"
+    }
+  ],
+  "generation": {
+    "notebook": "https://github.com/sunnydean/gen-ogc-apppackage/blob/main/generate.ipynb",
+    "cell_id": "generation",
+    "outputs": [
+      "cwl",
+      "job"
+    ],
+    "cwl_sha256": "c80d12da581b9e4b7aed89c76a390048fd6626b3ab521cc152a7872bd2bfa854",
+    "job_sha256": "661994fdbe17eafe4e860817ab90e196a84c24b6560d3b0a1fefaf5dc7d1181b",
+    "candidate_attempts": 1,
+    "recorded_static_validation": "PASS",
+    "gemini_requests": 6,
+    "prompt_tokens": 241124
+  },
+  "notes": [
+    "Extracted from saved notebook outputs without rerunning analysis, Gemini or the scientific workflow.",
+    "Cluster purposes and artifact connections are AI interpretations of source evidence, not recorded execution events.",
+    "The generated CWL/job pair is distinct from the CWL snapshot in the successful Lightning2EarthCARE CWLProv run."
+  ]
+}

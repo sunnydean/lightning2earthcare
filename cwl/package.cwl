@@ -126,19 +126,19 @@ $graph:
       doc: Directory containing monthly processing logs.
   s:hasPart:
   - s:identifier: cluster_2
-    s:name: Collocation pipeline execution CLI
-    s:description: Parse command-line arguments and run the satellite lightning to
-      EarthCARE collocation pipeline across dates.
+    s:name: Pipeline CLI command
+    s:description: Parse command-line arguments and run the EarthCARE-lightning collocation pipeline
+      over a date range.
   - s:identifier: cluster_3
-    s:additionalType: ospd2026/annotations.ttl#collocation
-    s:name: Single-source collocation and NetCDF export
-    s:description: Retrieve satellite lightning data, apply clustering and parallax
-      corrections, match detections to EarthCARE observations, and export NetCDF files.
+    s:additionalType: ospd2026/registry/geoprocessing-activities.jsonld#collocation
+    s:name: Lightning data collocation processing
+    s:description: Retrieve, cluster, parallax-correct, collocate, and output matched lightning
+      observations and CPR track summaries.
   - s:identifier: cluster_6
-    s:additionalType: ospd2026/annotations.ttl#selection
-    s:name: EarthCARE query and pipeline orchestration
-    s:description: Identify matching EarthCARE orbit frames, select appropriate lightning
-      sensors, configure logging, and orchestrate daily pipeline runs.
+    s:additionalType: ospd2026/registry/geoprocessing-activities.jsonld#selection
+    s:name: Collocation runtime orchestration
+    s:description: Orchestrate pipeline execution over date ranges, catalog lookups, source
+      selection, and logging context.
 - class: CommandLineTool
   id: create_storm_catalogue
   label: Create storm catalogue
@@ -176,15 +176,14 @@ $graph:
       doc: JSON storm catalogue summarizing lightning clusters.
   s:hasPart:
   - s:identifier: cluster_4
-    s:additionalType: ospd2026/annotations.ttl#aggregation
-    s:name: Storm catalogue file aggregation
-    s:description: Extract lightning cluster descriptors and CPR overpass metrics
-      from collocated NetCDF files.
+    s:additionalType: ospd2026/registry/geoprocessing-activities.jsonld#aggregation
+    s:name: Storm catalogue file processor
+    s:description: Extract lightning storm properties and along-track statistics from collocated
+      NetCDF files.
   - s:identifier: cluster_5
-    s:additionalType: ospd2026/annotations.ttl#aggregation
-    s:name: Storm catalogue generation CLI
-    s:description: Aggregate lightning clusters across all processed overpass files
-      and save the final storm catalogue JSON.
+    s:name: Create storm catalogue CLI
+    s:description: Aggregate collocated lightning and CPR counts across all files into a unified
+      JSON storm catalogue.
 - class: CommandLineTool
   id: post_process_nc_to_parquet
   label: Convert NetCDF to GeoParquet
@@ -222,15 +221,14 @@ $graph:
       doc: Directory containing converted GeoParquet datasets.
   s:hasPart:
   - s:identifier: cluster_7
-    s:additionalType: ospd2026/annotations.ttl#conversion
-    s:name: Dataset conversion to GeoParquet
-    s:description: Convert NetCDF collocation outputs and catalogue JSON data into
-      flattened GeoParquet formats.
+    s:additionalType: ospd2026/registry/geoprocessing-activities.jsonld#conversion
+    s:name: NetCDF and JSON to Parquet conversion
+    s:description: Transform collocated NetCDF files and storm catalogue JSON into structured
+      GeoParquet dataframes.
   - s:identifier: cluster_8
-    s:additionalType: ospd2026/annotations.ttl#conversion
-    s:name: GeoParquet conversion CLI
-    s:description: Batch convert collocation NetCDFs and storm catalogue entries into
-      monthly GeoParquet datasets with validation checks.
+    s:name: Parquet postprocessing CLI
+    s:description: Execute CLI conversion of collocated NetCDFs and storm catalogue to GeoParquet
+      files.
 - class: CommandLineTool
   id: create_stac_catalogue
   label: Create STAC catalogue
@@ -268,15 +266,13 @@ $graph:
       doc: STAC catalogue directory containing catalog.json and items.
   s:hasPart:
   - s:identifier: cluster_9
-    s:additionalType: ospd2026/annotations.ttl#stac
-    s:name: STAC metadata and item generation
-    s:description: Extract dataset variable metadata and construct STAC items referencing
-      converted Parquet files.
+    s:additionalType: ospd2026/registry/geoprocessing-activities.jsonld#stac
+    s:name: STAC item generation helpers
+    s:description: Extract NetCDF metadata and create STAC item records from Parquet dataset files.
   - s:identifier: cluster_10
-    s:additionalType: ospd2026/annotations.ttl#stac
     s:name: STAC catalogue generation CLI
-    s:description: Build and serialize a self-contained STAC catalogue organizing
-      all Parquet collections and metadata assets.
+    s:description: Generate a self-contained STAC catalogue organizing generated Parquet dataset
+      collections.
 - class: Workflow
   id: main
   label: Lightning to EarthCARE collocation pipeline
@@ -414,9 +410,9 @@ $graph:
       - stac_dir
   s:hasPart:
   - s:identifier: cluster_1
-    s:name: CLI command dispatcher
-    s:description: Provide the root Click command group dispatcher for the Lightning2EarthCARE
-      processing pipeline.
+    s:name: CLI root entrypoint
+    s:description: Define the top-level Click group command for the Lightning2EarthCARE pipeline
+      CLI.
 $namespaces:
   s: https://schema.org/
 $schemas:

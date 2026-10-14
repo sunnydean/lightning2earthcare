@@ -208,3 +208,7 @@ __marimo__/
 
 # credentials
 credentials.txt
+
+
+cwl/provenance/
+cwl/results/

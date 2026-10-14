@@ -1,0 +1,46 @@
+# Manually assembled from notebook clusters, CWLProv run IDs and input STAC metadata.
+@prefix : <#> .
+@prefix schema: <https://schema.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix term: <registry/geoprocessing-activities.jsonld#> .
+@prefix run: <urn:uuid:> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+# Post-run interpretations only. Original CWLProv identifiers and evidence are unchanged.
+<> a prov:Entity ;
+    schema:name "Lightning2EarthCARE D120 draft annotations" ;
+    schema:description "Local candidates for review; not accepted registry entries or internal execution records." ;
+    prov:wasDerivedFrom <../provenance/snapshot/package.cwl>, <../provenance/metadata/provenance/primary.cwlprov.ttl> ;
+    prov:wasAttributedTo <https://github.com/sunnydean> .
+
+# Descriptive clusters: names and detailed descriptions remain in the CWL.
+:cluster_1 schema:identifier "cluster_1" ; schema:isPartOf <../package.cwl#main> .
+:cluster_2 schema:identifier "cluster_2" ; schema:isPartOf <../package.cwl#lightning2ec> .
+:cluster_3 schema:identifier "cluster_3" ; schema:isPartOf <../package.cwl#lightning2ec> ; dct:type term:collocation .
+:cluster_4 schema:identifier "cluster_4" ; schema:isPartOf <../package.cwl#create_storm_catalogue> ; dct:type term:aggregation .
+:cluster_5 schema:identifier "cluster_5" ; schema:isPartOf <../package.cwl#create_storm_catalogue> .
+:cluster_6 schema:identifier "cluster_6" ; schema:isPartOf <../package.cwl#lightning2ec> ; dct:type term:selection .
+:cluster_7 schema:identifier "cluster_7" ; schema:isPartOf <../package.cwl#post_process_nc_to_parquet> ; dct:type term:conversion .
+:cluster_8 schema:identifier "cluster_8" ; schema:isPartOf <../package.cwl#post_process_nc_to_parquet> .
+:cluster_9 schema:identifier "cluster_9" ; schema:isPartOf <../package.cwl#create_stac_catalogue> ; dct:type term:stac .
+:cluster_10 schema:identifier "cluster_10" ; schema:isPartOf <../package.cwl#create_stac_catalogue> .
+
+# Link descriptions to the five existing run identifiers; do not invent cluster runs.
+run:3add406f-951c-4755-80c9-5c24ef5f5e1e schema:subjectOf :cluster_1 .
+run:f13914a9-396e-420d-8427-7ea6c5c89d53 schema:subjectOf :cluster_2, :cluster_3, :cluster_6 .
+run:e945d427-aa6b-495a-8d93-bace175d0872 schema:subjectOf :cluster_4, :cluster_5 .
+run:0ba8d7fc-cf78-4da7-8bdd-97b335bf6ae6 schema:subjectOf :cluster_7, :cluster_8 .
+run:c30550c3-1110-42d1-8777-62021908438b schema:subjectOf :cluster_9, :cluster_10 .
+
+# Curated input references from the STAC metadata, not upstream execution provenance.
+run:10ce12db-87d0-4367-9d64-45a49c1fd8b3
+    prov:atLocation <../earthcare/> ;
+    rdfs:seeAlso <../earthcare/catalog.json>, <https://doi.org/10.57780/eca-c094213>,
+        <https://doi.org/10.57780/eca-94b4e53>, <https://catalog.maap.eo.esa.int/catalogue/collections/EarthCAREL2Validated_MAAP> ;
+    rdfs:comment "Input STAC and product source references; upstream execution provenance was not supplied." .
+run:929e7b41-91cc-408b-8991-e4a971e837c2
+    prov:atLocation <../earthcare/> ;
+    rdfs:seeAlso <../earthcare/catalog.json>, <https://doi.org/10.57780/eca-c094213>,
+        <https://doi.org/10.57780/eca-94b4e53>, <https://catalog.maap.eo.esa.int/catalogue/collections/EarthCAREL2Validated_MAAP> ;
+    rdfs:comment "Input STAC and product source references; upstream execution provenance was not supplied." .

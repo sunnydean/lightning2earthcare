@@ -1,0 +1,59 @@
+{
+  "@context": {
+    "id": "@id",
+    "type": "@type",
+    "label": "skos:prefLabel",
+    "definition": "skos:definition",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "schema": "https://schema.org/",
+    "prov": "http://www.w3.org/ns/prov#",
+    "ospd": "https://www.opengis.net/def/ospd/2026/",
+    "ex": "http://example.org/"
+  },
+  "@graph": [
+    {"id": "", "type": "skos:ConceptScheme", "label": "Provisional geoprocessing activities", "schema:description": "Reusable activities selected from Lightning2EarthCARE code clusters."},
+    {"id": "#draftStatus", "schema:memberOf": {"id": ""}, "schema:value": {"id": "https://def.isotc211.org/codeset/ItemStatus/experimental"}},
+    {"id": "#contributor", "prov:agent": {"id": "https://github.com/sunnydean"}, "prov:hadRole": {"id": "https://def.isotc211.org/codeset/RoleCode/contributor"}},
+    {
+      "id": "#collocation", "type": ["skos:Concept", "ospd:GeoprocessingActivity"],
+      "label": "Spatiotemporal observation collocation",
+      "definition": "Retrieve, cluster, parallax-correct and collocate sensor observations, producing matched observations and track summaries.",
+      "prov:wasDerivedFrom": {"id": "../annotations.ttl#cluster_3"},
+      "skos:relatedMatch": {"id": "http://ospd/demo/GA047"},
+      "skos:scopeNote": "Data Acquisition covers a related retrieval component; its connector/indexing scope does not describe collocation.",
+      "skos:inScheme": {"id": ""}, "ex:qualifiedStatus": {"id": "#draftStatus"}, "prov:qualifiedAttribution": {"id": "#contributor"}
+    },
+    {
+      "id": "#aggregation", "type": ["skos:Concept", "ospd:GeoprocessingActivity"],
+      "label": "Storm property summarisation",
+      "definition": "Extract storm properties and along-track statistics from collocated observations.",
+      "prov:wasDerivedFrom": {"id": "../annotations.ttl#cluster_4"},
+      "skos:inScheme": {"id": ""}, "ex:qualifiedStatus": {"id": "#draftStatus"}, "prov:qualifiedAttribution": {"id": "#contributor"}
+    },
+    {
+      "id": "#selection", "type": ["skos:Concept", "ospd:GeoprocessingActivity"],
+      "label": "Spatiotemporal observation selection",
+      "definition": "Select observation sources through date-range queries and catalogue lookups.",
+      "prov:wasDerivedFrom": {"id": "../annotations.ttl#cluster_6"},
+      "skos:relatedMatch": {"id": "http://ospd/demo/GA020"},
+      "skos:scopeNote": "Selection facet of a mixed orchestration cluster. Filter geometries concerns geometric objects, not the full source-selection operation.",
+      "skos:inScheme": {"id": ""}, "ex:qualifiedStatus": {"id": "#draftStatus"}, "prov:qualifiedAttribution": {"id": "#contributor"}
+    },
+    {
+      "id": "#conversion", "type": ["skos:Concept", "ospd:GeoprocessingActivity"],
+      "label": "Geospatial tabular conversion",
+      "definition": "Transform scientific datasets and associated catalogue records into structured geospatial tables.",
+      "prov:wasDerivedFrom": {"id": "../annotations.ttl#cluster_7"},
+      "skos:relatedMatch": {"id": "http://ospd/demo/GA044"},
+      "skos:scopeNote": "Field Normalization covers related field harmonisation; it does not describe the full dataset-to-GeoParquet conversion.",
+      "skos:inScheme": {"id": ""}, "ex:qualifiedStatus": {"id": "#draftStatus"}, "prov:qualifiedAttribution": {"id": "#contributor"}
+    },
+    {
+      "id": "#stac", "type": ["skos:Concept", "ospd:GeoprocessingActivity"],
+      "label": "STAC item generation",
+      "definition": "Extract scientific-dataset metadata and create STAC item records linking data assets.",
+      "prov:wasDerivedFrom": {"id": "../annotations.ttl#cluster_9"},
+      "skos:inScheme": {"id": ""}, "ex:qualifiedStatus": {"id": "#draftStatus"}, "prov:qualifiedAttribution": {"id": "#contributor"}
+    }
+  ]
+}

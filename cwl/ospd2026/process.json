@@ -1,0 +1,28 @@
+{
+  "id": "lightning2earthcare",
+  "version": "0.1.0",
+  "title": "Lightning to EarthCARE collocation pipeline",
+  "description": "Manually mapped from package.cwl: collocation, storm analysis, Parquet export and STAC creation.",
+  "inputs": {
+    "start_date": {"title": "Start date", "schema": {"type": "string"}, "minOccurs": 1, "maxOccurs": 1},
+    "end_date": {"title": "End date", "schema": {"type": "string"}, "minOccurs": 1, "maxOccurs": 1},
+    "credentials_file": {"title": "Credentials file", "schema": {"type": "object", "properties": {"class": {"enum": ["File"]}, "path": {"type": "string"}, "location": {"type": "string", "format": "uri-reference"}}, "required": ["class"], "anyOf": [{"required": ["path"]}, {"required": ["location"]}]}, "minOccurs": 1, "maxOccurs": 1, "description": "CWL File reference; credentials must be supplied privately."},
+    "earthcare_catalog": {"title": "EarthCARE catalog directory", "schema": {"type": "object", "properties": {"class": {"enum": ["Directory"]}, "path": {"type": "string"}, "location": {"type": "string", "format": "uri-reference"}}, "required": ["class"], "anyOf": [{"required": ["path"]}, {"required": ["location"]}], "nullable": true}, "minOccurs": 0, "maxOccurs": 1, "description": "CWL Directory reference containing catalog.json; service staging is unspecified."},
+    "products": {"title": "EarthCARE products", "schema": {"default": ["MSI_COP_2A", "CPR_FMR_2A"], "type": "array", "items": {"type": "string"}, "nullable": true}, "minOccurs": 0, "maxOccurs": 1},
+    "frames": {"title": "Orbit frames", "schema": {"default": ["A", "B", "D", "E", "F", "H"], "type": "array", "items": {"type": "string"}, "nullable": true}, "minOccurs": 0, "maxOccurs": 1},
+    "half_window_minutes": {"title": "Integration half-window", "schema": {"default": 60, "type": "integer", "nullable": true}, "minOccurs": 0, "maxOccurs": 1},
+    "lightning_platforms": {"title": "Lightning platforms", "schema": {"default": ["MTG-I1", "GOES-16", "GOES-18", "GOES-19"], "type": "array", "items": {"type": "string"}, "nullable": true}, "minOccurs": 0, "maxOccurs": 1},
+    "distance_threshold_km": {"title": "Distance threshold", "schema": {"default": 5.0, "type": "number", "nullable": true}, "minOccurs": 0, "maxOccurs": 1},
+    "time_threshold_s": {"title": "Time threshold", "schema": {"default": 300, "type": "integer", "nullable": true}, "minOccurs": 0, "maxOccurs": 1}
+  },
+  "outputs": {
+    "log_dir_out": {"title": "Collocation log directory", "description": "Optional collocation log directory, represented here by a provenance entity linking the local directory.", "schema": {"$ref": "https://ogcincubator.github.io/bblock-prov-schema/build/annotated/ogc-utils/prov-entity/schema.json"}},
+    "stac_dir": {"title": "STAC catalogue directory", "description": "STAC catalogue directory containing catalog metadata and items. Represented here by a provenance entity linking the local directory.", "schema": {"$ref": "https://ogcincubator.github.io/bblock-prov-schema/build/annotated/ogc-utils/prov-entity/schema.json"}}
+  },
+  "links": [
+    {"href": "../package.cwl#main", "rel": "http://www.opengis.net/def/rel/ogc/1.0/executionUnit", "type": "application/cwl+yaml"},
+    {"href": "results.json", "rel": "http://www.opengis.net/def/rel/ogc/1.0/results", "type": "application/json"},
+    {"href": "provenance.jsonld", "rel": "http://www.w3.org/ns/prov#has_provenance", "type": "application/ld+json"},
+    {"href": "annotations.ttl", "rel": "describedby", "type": "text/turtle"}
+  ]
+}

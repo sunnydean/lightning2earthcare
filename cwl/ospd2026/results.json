@@ -1,0 +1,41 @@
+{
+  "log_dir_out": {
+    "mediaType": "application/ld+json",
+    "value": {
+      "@context": "https://ogcincubator.github.io/bblock-prov-schema/build/annotated/ogc-utils/prov/context.jsonld",
+      "rdfs:comment": "Results manually mapped from primary-output.json and CWLProv, with local output locations.",
+      "id": "urn:uuid:02f65e3b-2e1c-4cfb-986b-5ce9785b3d46",
+      "provType": "prov:Entity",
+      "atLocation": "../results/logs/",
+      "has_provenance": [
+        {
+          "id": "provenance.jsonld",
+          "entityType": [
+            "prov:Entity",
+            "prov:Bundle"
+          ]
+        }
+      ],
+      "wasGeneratedBy": "urn:uuid:f13914a9-396e-420d-8427-7ea6c5c89d53"
+    }
+  },
+  "stac_dir": {
+    "mediaType": "application/ld+json",
+    "value": {
+      "@context": "https://ogcincubator.github.io/bblock-prov-schema/build/annotated/ogc-utils/prov/context.jsonld",
+      "id": "urn:uuid:d28a13d0-f8d9-4567-a895-1dbc17029416",
+      "provType": "prov:Entity",
+      "atLocation": "../results/stac/",
+      "has_provenance": [
+        {
+          "id": "provenance.jsonld",
+          "entityType": [
+            "prov:Entity",
+            "prov:Bundle"
+          ]
+        }
+      ],
+      "wasGeneratedBy": "urn:uuid:c30550c3-1110-42d1-8777-62021908438b"
+    }
+  }
+}

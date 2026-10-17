@@ -1,0 +1,29 @@
+## Part A — Main Report section (required)
+
+Approximately three paragraphs and one figure. This is what appears in the body of D001.
+
+### [Organization Name]
+
+**Deliverable(s):** [CFP role identifier(s) and tracker identifier(s)]
+
+#### Overview — approximately one paragraph
+
+What you built and why, and how it fits the pilot. Name the workflow, service or register you
+worked on, and say what a reader would see if they went and looked at it.
+
+#### Challenges — approximately one paragraph
+
+The main obstacles. This is the paragraph most likely to be quoted in the Report's findings, so
+be specific: what blocked you, what you tried, and whether it was resolved. Problems with tooling,
+with the Building Blocks methodology, with the standards themselves, or with things that turned
+out to be underspecified are all in scope.
+
+#### Future work — approximately one paragraph
+
+What you would do next, and what you think the initiative or OGC should take forward.
+
+#### Figure
+
+One figure — an architecture diagram, a data flow, a provenance graph, a screenshot of a working
+interface. Supply it as a separate image file (PNG or SVG) with a one-line caption. If you have no
+figure, say so; it is not a blocker.

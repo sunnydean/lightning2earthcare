@@ -1,0 +1,113 @@
+[appendix,obligation="informative"]
+[[annex-lampata]]
+== Lampata Contribution to the OGC Open Science Persistent Demonstrator 2026
+
+Deliverable(s): D120 - OGC API Processes Profiler; D001.
+
+=== Contribution overview
+
+http://doi.org/10.83395/2wem-kz55[Lightning2EarthCARE] is a workflow for collocating EarthCARE satellite observations with lightning detections from geostationary sensors. It queries EarthCARE MSI and CPR data, retrieves lightning observations from MTG-LI and GOES-GLM, and performs spatial–temporal matching between the datasets. The pipeline clusters lightning detections, generates collocated datasets, and produces a catalogue of lightning storms sampled along the EarthCARE nadir track.
+
+Its scientific inputs include EarthCARE observations and MTG-LI or GOES-GLM lightning detections, selected by dates, products, platforms and matching thresholds.
+
+The https://github.com/sunnydean/lightning2earthcare/blob/ogc-ospd26/cwl/package.cwl[CWL package] has four executable steps: collocation, storm catalogue generation, GeoParquet export and STAC catalogue creation. These produce matched datasets, storm summaries and geospatial features, with STAC records describing and linking the data assets.
+
+// Mermaid rendering requires a diagram-enabled AsciiDoc processor.
+.Scientific inputs and six artifact bindings between four executable CWL steps.
+[mermaid]
+----
+flowchart TD
+    E["EarthCARE observations"] --> C
+    L["Satellite lightning measurements"] --> C
+    P["Dates, products and matching settings"] -.-> C
+    C["1. Observation collocation<br/>lightning2ec"] -->|Lightning groups| S
+    C -->|Track counts| S
+    S["2. Storm catalogue generation<br/>create_storm_catalogue"] -->|Storm catalogue| G
+    C -->|Collocated data| G
+    G["3. GeoParquet export<br/>post_process_nc_to_parquet"] -->|GeoParquet datasets| T
+    C -->|Collocated data| T
+    T["4. STAC catalogue creation<br/>create_stac_catalogue"] --> O["STAC catalogue and asset links"]
+    C --> R["Processing logs"]
+----
+
+We produced an annotated four-step CWL workflow, ten activity descriptions, https://github.com/sunnydean/lightning2earthcare/blob/ogc-ospd26/cwl/ospd2026/registry/geoprocessing-activities.jsonld[five provisional registry definitions] and provenance metadata for Lightning2EarthCARE. The provenance was derived from `cwltool --provenance` output using the https://github.com/ogcincubator/bblock-prov-schema/blob/master/build/annotated/ogc-utils/prov/context.jsonld[shared PROV JSON-LD representation].
+
+=== Provenance implementation - _Workflow Profilers and OGC API Processes Profilers_
+
+We applied the https://github.com/ogcincubator/bblock-prov-schema/blob/master/build/annotated/ogc-utils/prov/context.jsonld[shared PROV JSON-LD representation] to the Lightning2EarthCARE example, linking result entities to their generating activities and execution provenance. CWLProv supplied the recorded evidence. Our initial approach was a one-to-one mapping from `cwltool --provenance` output to the shared representation. We independently developed a small helper to extract the run and data relationships and attach our activity annotations.
+
+=== Process types and register contribution - _all Participants_
+
+We used a novel AI workflow-generation approach building on our OSPD25 work. The https://github.com/sunnydean/gen-ogc-apppackage[gen-ogc-apppackage tool] combines function clustering, I/O analysis and AI interpretation to derive descriptions from the source code. We used these groups to define the terms and map them to the register.
+
+We wanted readers and tools to see the scientific operations performed within each command while preserving the four executable CWL steps. We therefore added structured descriptions through https://www.commonwl.org/v1.2/Workflow.html#Extensions_and_metadata[CWL metadata extensions], which permit namespaced annotations and recommend Schema.org terms.
+
+In our CWL, Schema.org https://schema.org/hasPart[`s:hasPart`] attaches a list of internal activity descriptions to the relevant `CommandLineTool` or `Workflow` definition. Each entry carries an `s:identifier`, `s:name` and short `s:description`; the five scientific activities also use https://schema.org/additionalType[`s:additionalType`] to link to their provisional registry terms. For example, `lightning2ec` contains descriptions of satellite observation discovery and multi-sensor observation matching, alongside its CLI wrapper. These entries document the command's internal structure; they do not define execution order, additional CWL steps or separately observed runs.
+
+[cols="1,3,6",options="header"]
+|===
+|Group |Activity |Description
+|C1 |Workflow command entrypoint |Dispatch the selected collocation, catalogue or export command.
+|C2 |Collocation pipeline command |Configure dates, sensors and matching thresholds, then launch collocation.
+|C3 |Multi-sensor lightning matching |Cluster lightning with DBSCAN, correct MTG-LI parallax, and match EarthCARE observations in space and time.
+|C4 |Lightning storm characterisation |Derive storm area, duration, displacement and lightning activity near the radar track.
+|C5 |Storm catalogue aggregation command |Combine storm records across overpasses into an annotated JSON catalogue.
+|C6 |Satellite observation discovery and source selection |Pair EarthCARE products and select lightning sources by coverage and acquisition time.
+|C7 |Geospatial feature and time-series construction |Convert observations and storm histories into geographic point features and time-series tables.
+|C8 |GeoParquet export command |Export GeoParquet tables, grouping lightning observations by sensor and month.
+|C9 |STAC dataset item generation |Create STAC Items with spatial and temporal coverage, variable descriptions and asset links.
+|C10 |STAC catalogue assembly command |Assemble linked STAC collections for lightning observations, radar counts and storm properties.
+|===
+
+.Function groups and inferred dependencies used to propose activity types.
+image::https://raw.githubusercontent.com/sunnydean/gen-ogc-apppackage/main/docs/graphs/labelled-clusters.svg[Ten function groups used to inform scientific activity descriptions]
+
+=== Register implementation - _Register Implementers only_
+
+Not applicable to this D120 contribution.
+
+=== Validation evidence
+
+The https://github.com/sunnydean/lightning2earthcare/blob/ogc-ospd26/cwl/ospd2026/README.md[example README] records passing schema and relationship checks for the CWL/job, process/results metadata, shared PROV representation and input STAC records. The recorded relationships cover four process runs, six artifact connections and ten activity mappings. These checks apply to the reviewed local example; API service conformance has not been established.
+
+=== Provenance encoding: choice and reasoning
+
+We use a separate PROV JSON-LD graph with the shared context to retain CWLProv identifiers and relationships while adding scientific activity annotations. This preserves links to the execution evidence and distinguishes recorded command runs from descriptions of internal operations.
+
+=== Findings and lessons learned
+
+CWLProv already uses PROV-O, making a direct mapping a reasonable first approach. Completing that mapping requires decisions about how the execution graph is represented and supplemented:
+
+* Preserve execution relationships. Input/output roles and timestamps are attached to usage and generation records; directories and collections contain linked entities. These connections must survive the export so that the data flow remains traceable.
+* Connect results to provenance. Output records need explicit provenance links and consistent identifiers, with a clear base for resolving bundle-relative references.
+* Separate recorded execution from scientific interpretation. CWLProv records the four command executions, but does not supply our scientific activity terms or observe the ten internal groups as separate runs. Those descriptions remain annotations rather than additional execution records.
+
+Our initial approach was to write a helper that transforms the CWL provenance run results to the OSPD schema but there are various challanges to a simple translation. Our helper provides a partial export. A complete mapping needs checks of identifiers and relationships alongside schema validation; changing the JSON-LD context alone does not supply the result wrappers or scientific annotations.
+
+Another challenge we encountered was finding registered terms that adequately describe our scientific activities. For example, we identified three related terms whose definitions cover only part of the operation:
+
+[cols="3,3,6",options="header"]
+|===
+|Activity |Related registered term |Scope requiring further description
+|Multi-sensor observation matching |https://github.com/Kurrawong/ospd-data/blob/main/resources/registers/voyager/items/GA047.ttl[GA047 Data Acquisition] |The registered definition concerns connector-side retrieval, decoding and geolocation; collocation additionally associates observations in space and time.
+|Satellite observation discovery |https://github.com/Kurrawong/ospd-data/blob/main/resources/registers/52north/items/GA020.ttl[GA020 Filter geometries] |Time, product and sensor selection extend beyond filtering a list of geometries.
+|Geospatial feature construction |https://github.com/Kurrawong/ospd-data/blob/main/resources/registers/voyager/items/GA044.ttl[GA044 Field Normalization] |Constructing geometries from observation coordinates extends beyond normalising attributes to a common schema.
+|===
+
+These registered terms are imperfect matches, but they describe related families of scientific processing. We therefore propose organising existing terms and our candidate definitions within a hierarchy of broader activities and more specific operations. Shared parent terms would make related workflows easier for people to understand and compare, while preserving the distinctions between their methods. Our five definitions remain proposals for review within that structure.
+
+The same hierarchy would give AI agents a choice of granularity when reading or generating workflows: broad activity types for summarising a workflow, and specific types for describing its scientific operations. In our example, the ten code groups include both scientific operations and command-line wrappers within four executable steps. This distinction needs to remain explicit so that a more detailed description does not imply additional executable steps.
+
+=== Recommendations
+
+We propose reviewing the CWLProv mapping and provenance links with the OSPD team. We would extend `gen-ogc-apppackage` to select activity types using registry hierarchies and code/I/O evidence. Candidate terms and proposed parents would be added to the registry spreadsheet, prioritising reuse. Optional work would build on AI-led schema definition to support Building Block profile documentation and publication.
+
+We propose extending our https://docs.ogc.org/per/25-044.html#annex-lampata[OSPD25 work on AI-led schema definition] to generate profiles for OGC Application Packages and other workflow definitions, using OSPD26 geoprocessing terms to constrain activity descriptions and guide AI workflow generation.
+
+=== References
+
+* http://doi.org/10.83395/2wem-kz55[Lightning2EarthCARE Workflow]
+* https://github.com/sunnydean/lightning2earthcare/tree/ogc-ospd26/cwl/ospd2026[Lightning2EarthCARE CWL] - example metadata, activity definitions and validation scope.
+* https://github.com/sunnydean/gen-ogc-apppackage[gen-ogc-apppackage] - workflow analysis and AI generation tool.
+* https://docs.ogc.org/per/25-044.html#annex-lampata[OSPD25 report, Lampata annex] - prior work on AI-led schema definition.
+* https://github.com/ogcincubator/bblock-prov-schema/blob/master/build/annotated/ogc-utils/prov/context.jsonld[Shared PROV JSON-LD context] - provenance representation reference.

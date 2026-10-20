@@ -1,8 +1,8 @@
 {
   "id": "lightning2earthcare",
   "version": "0.1.0",
-  "title": "Lightning to EarthCARE collocation pipeline",
-  "description": "Manually mapped from package.cwl: collocation, storm analysis, Parquet export and STAC creation.",
+  "title": "Lightning2EarthCARE storm analysis",
+  "description": "Mapped from package.cwl: match EarthCARE and lightning observations, characterise storms, construct geospatial features and catalogue the resulting datasets.",
   "inputs": {
     "start_date": {"title": "Start date", "schema": {"type": "string"}, "minOccurs": 1, "maxOccurs": 1},
     "end_date": {"title": "End date", "schema": {"type": "string"}, "minOccurs": 1, "maxOccurs": 1},

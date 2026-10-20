@@ -26,6 +26,6 @@ The script exports directly to `provenance.jsonld`, omitting credential details 
 
 ## Validation and scope
 
-Checked **14 October 2026**: CWL/job checks, OGC process/results schemas, IPT results, shared PROV and 27 input STAC checks passed. Source comparisons confirmed four process runs, six artifact connections and ten cluster mappings. These results apply to the reviewed files; a fresh export requires profile cleanup and revalidation.
+Checked **14 October 2026**: CWL/job checks, OGC process/results schemas, shared PROV and 27 input STAC checks passed. Source comparisons confirmed four process runs, six artifact connections and ten cluster mappings. These results apply to the reviewed files; a fresh export requires profile cleanup and revalidation.
 
 This is a local metadata example, not an API execution or full service-conformance claim. Terms remain provisional. Original `cwl/provenance/` and `cwl/results/` are excluded from Git; the original bundle contains captured credentials. See the report for source links and remaining limitations.

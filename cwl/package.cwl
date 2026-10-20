@@ -2,8 +2,8 @@ cwlVersion: v1.2
 $graph:
 - class: CommandLineTool
   id: lightning2ec
-  label: Lightning to EarthCARE collocation
-  doc: Downloads and collocates satellite lightning data with EarthCARE CPR tracks.
+  label: Multi-sensor observation matching
+  doc: Match lightning and EarthCARE observations by location and time.
   baseCommand:
   - lightning2ec
   requirements:
@@ -21,28 +21,28 @@ $graph:
       default: collocation_data
       inputBinding:
         prefix: --lightning-dir
-      doc: Base directory for lightning downloads and collocated outputs.
+      doc: Lightning downloads and collocation outputs.
     log_dir:
       type: string
       default: logs
       inputBinding:
         prefix: --log-dir
-      doc: Directory where monthly log files are written.
+      doc: Monthly log directory.
     start_date:
       type: string
       inputBinding:
         prefix: --start-date
-      doc: Start date for processing in YYYY-MM-DD format.
+      doc: Start date (YYYY-MM-DD).
     end_date:
       type: string
       inputBinding:
         prefix: --end-date
-      doc: End date for processing in YYYY-MM-DD format.
+      doc: End date (YYYY-MM-DD).
     earthcare_catalog:
       type: Directory?
       inputBinding:
         prefix: --earthcare-catalog
-      doc: EarthCARE input directory containing catalog.json.
+      doc: EarthCARE directory containing catalog.json.
     products:
       type:
       - 'null'
@@ -74,7 +74,7 @@ $graph:
       default: 60
       inputBinding:
         prefix: --half-window
-      doc: Half-window of lightning integration in minutes.
+      doc: Lightning integration half-window (minutes).
     lightning_platforms:
       type:
       - 'null'
@@ -93,56 +93,53 @@ $graph:
       default: 5.0
       inputBinding:
         prefix: --distance-threshold
-      doc: Distance threshold from CPR track in kilometers.
+      doc: CPR track distance threshold (km).
     time_threshold_s:
       type: int?
       default: 300
       inputBinding:
         prefix: --time-threshold
-      doc: Temporal threshold from CPR acquisition in seconds.
+      doc: CPR acquisition time threshold (seconds).
     credentials_file:
       type: File
-      doc: Credentials file providing API tokens for EUMETSAT and ESA MAAP.
+      doc: EUMETSAT and ESA MAAP credentials file.
   outputs:
     source_dir:
       type: Directory
       outputBinding:
         glob: $(inputs.lightning_dir)
-      doc: Base directory containing lightning groups and track counts.
+      doc: Lightning groups and track counts.
     lightning_groups_dir:
       type: Directory
       outputBinding:
         glob: $(inputs.lightning_dir)/lightning_groups
-      doc: Directory containing collocated lightning groups NetCDF files.
+      doc: Collocated lightning groups in NetCDF.
     track_counts_dir:
       type: Directory
       outputBinding:
         glob: $(inputs.lightning_dir)/track_counts
-      doc: Directory containing along-track CPR counts NetCDF files.
+      doc: Along-track CPR counts in NetCDF.
     log_dir_out:
       type: Directory?
       outputBinding:
         glob: $(inputs.log_dir)
-      doc: Directory containing monthly processing logs.
+      doc: Monthly processing logs.
   s:hasPart:
   - s:identifier: cluster_2
     s:name: Pipeline CLI command
-    s:description: Parse command-line arguments and run the EarthCARE-lightning collocation pipeline
-      over a date range.
+    s:description: Run observation matching for the selected dates.
   - s:identifier: cluster_3
     s:additionalType: ospd2026/registry/geoprocessing-activities.jsonld#collocation
-    s:name: Lightning data collocation processing
-    s:description: Retrieve, cluster, parallax-correct, collocate, and output matched lightning
-      observations and CPR track summaries.
+    s:name: Multi-sensor observation matching
+    s:description: Match lightning and EarthCARE observations by location and time.
   - s:identifier: cluster_6
     s:additionalType: ospd2026/registry/geoprocessing-activities.jsonld#selection
-    s:name: Collocation runtime orchestration
-    s:description: Orchestrate pipeline execution over date ranges, catalog lookups, source
-      selection, and logging context.
+    s:name: Satellite observation discovery
+    s:description: Find satellite observations by time, coverage and product.
 - class: CommandLineTool
   id: create_storm_catalogue
-  label: Create storm catalogue
-  doc: Aggregates collocated lightning clusters and track counts into a storm catalogue.
+  label: Storm characterisation
+  doc: Estimate storm location, size, duration, movement and lightning activity.
   baseCommand:
   - create_storm_catalogue
   requirements:
@@ -156,38 +153,36 @@ $graph:
       type: Directory
       inputBinding:
         prefix: --lightning-groups-dir
-      doc: Directory containing collocated lightning groups NetCDF files.
+      doc: Collocated lightning groups in NetCDF.
     track_counts_dir:
       type: Directory
       inputBinding:
         prefix: --track-counts-dir
-      doc: Directory containing CPR track counts NetCDF files.
+      doc: Along-track CPR counts in NetCDF.
     output_filename:
       type: string?
       default: catalogue.json
       inputBinding:
         prefix: --output
-      doc: Output path for the generated storm catalogue JSON file.
+      doc: Storm catalogue output path.
   outputs:
     catalogue_json:
       type: File
       outputBinding:
         glob: $(inputs.output_filename)
-      doc: JSON storm catalogue summarizing lightning clusters.
+      doc: Storm catalogue in JSON.
   s:hasPart:
   - s:identifier: cluster_4
     s:additionalType: ospd2026/registry/geoprocessing-activities.jsonld#aggregation
-    s:name: Storm catalogue file processor
-    s:description: Extract lightning storm properties and along-track statistics from collocated
-      NetCDF files.
+    s:name: Storm characterisation
+    s:description: Estimate storm location, size, duration, movement and lightning activity.
   - s:identifier: cluster_5
     s:name: Create storm catalogue CLI
-    s:description: Aggregate collocated lightning and CPR counts across all files into a unified
-      JSON storm catalogue.
+    s:description: Combine storm summaries into a JSON catalogue.
 - class: CommandLineTool
   id: post_process_nc_to_parquet
-  label: Convert NetCDF to GeoParquet
-  doc: Converts collocated NetCDF datasets and storm catalogue to GeoParquet format.
+  label: Geospatial feature construction
+  doc: Build GeoParquet features from observations and storm records.
   baseCommand:
   - post_process_nc_to_parquet
   requirements:
@@ -201,38 +196,36 @@ $graph:
       type: File
       inputBinding:
         prefix: --catalogue
-      doc: Storm catalogue JSON file.
+      doc: Storm catalogue in JSON.
     source_dir:
       type: Directory?
       inputBinding:
         prefix: --source-dir
-      doc: Collocation output directory containing lightning groups and track counts.
+      doc: Lightning groups and track counts.
     output_dir_name:
       type: string?
       default: parquet
       inputBinding:
         prefix: --output-dir
-      doc: Directory name for generated Parquet files.
+      doc: Output directory name.
   outputs:
     parquet_dir:
       type: Directory
       outputBinding:
         glob: $(inputs.output_dir_name)
-      doc: Directory containing converted GeoParquet datasets.
+      doc: GeoParquet datasets.
   s:hasPart:
   - s:identifier: cluster_7
     s:additionalType: ospd2026/registry/geoprocessing-activities.jsonld#conversion
-    s:name: NetCDF and JSON to Parquet conversion
-    s:description: Transform collocated NetCDF files and storm catalogue JSON into structured
-      GeoParquet dataframes.
+    s:name: Geospatial feature construction
+    s:description: Build GeoParquet features from observations and storm records.
   - s:identifier: cluster_8
     s:name: Parquet postprocessing CLI
-    s:description: Execute CLI conversion of collocated NetCDFs and storm catalogue to GeoParquet
-      files.
+    s:description: Run GeoParquet export.
 - class: CommandLineTool
   id: create_stac_catalogue
-  label: Create STAC catalogue
-  doc: Builds a STAC catalogue organizing converted Parquet items and variable metadata.
+  label: Spatiotemporal dataset cataloguing
+  doc: Catalogue dataset coverage, variables and assets in STAC.
   baseCommand:
   - create_stac_catalogue
   requirements:
@@ -246,56 +239,53 @@ $graph:
       type: Directory
       inputBinding:
         prefix: --parquet-dir
-      doc: Directory containing converted Parquet datasets.
+      doc: GeoParquet datasets.
     source_dir:
       type: Directory?
       inputBinding:
         prefix: --source-dir
-      doc: Collocation output directory for NetCDF variable metadata extraction.
+      doc: NetCDF source data for variable metadata.
     output_dir_name:
       type: string?
       default: stac
       inputBinding:
         prefix: --output-dir
-      doc: Directory name for the generated STAC catalogue.
+      doc: Output directory name.
   outputs:
     stac_dir:
       type: Directory
       outputBinding:
         glob: $(inputs.output_dir_name)
-      doc: STAC catalogue directory containing catalog.json and items.
+      doc: STAC catalogue and items.
   s:hasPart:
   - s:identifier: cluster_9
     s:additionalType: ospd2026/registry/geoprocessing-activities.jsonld#stac
-    s:name: STAC item generation helpers
-    s:description: Extract NetCDF metadata and create STAC item records from Parquet dataset files.
+    s:name: Spatiotemporal dataset cataloguing
+    s:description: Catalogue dataset coverage, variables and assets in STAC.
   - s:identifier: cluster_10
     s:name: STAC catalogue generation CLI
-    s:description: Generate a self-contained STAC catalogue organizing generated Parquet dataset
-      collections.
+    s:description: Assemble the STAC catalogue.
 - class: Workflow
   id: main
-  label: Lightning to EarthCARE collocation pipeline
-  doc: Collocates satellite lightning observations with EarthCARE overpasses and generates
-    Parquet and STAC catalogues.
+  label: Lightning2EarthCARE storm analysis
+  doc: Match observations, characterise storms and catalogue geospatial datasets.
   inputs:
     start_date:
       type: string
       label: Start date
-      doc: Start date for processing in YYYY-MM-DD format.
+      doc: Start date (YYYY-MM-DD).
     end_date:
       type: string
       label: End date
-      doc: End date for processing in YYYY-MM-DD format.
+      doc: End date (YYYY-MM-DD).
     credentials_file:
       type: File
       label: Credentials file
-      doc: Path to credentials file with EUMETSAT and ESA MAAP tokens; replace placeholder
-        /REPLACE_ME/credentials.json.
+      doc: EUMETSAT and ESA MAAP credentials file.
     earthcare_catalog:
       type: Directory?
       label: EarthCARE catalog directory
-      doc: EarthCARE input directory containing catalog.json metadata.
+      doc: EarthCARE directory containing catalog.json.
     products:
       type:
       - 'null'
@@ -305,7 +295,7 @@ $graph:
       - MSI_COP_2A
       - CPR_FMR_2A
       label: EarthCARE products
-      doc: EarthCARE products to process during collocation.
+      doc: EarthCARE products to process.
     frames:
       type:
       - 'null'
@@ -319,12 +309,12 @@ $graph:
       - F
       - H
       label: Orbit frames
-      doc: Orbit frames to include in processing.
+      doc: Orbit frames to include.
     half_window_minutes:
       type: int?
       default: 60
       label: Integration half-window
-      doc: Half-window of lightning integration in minutes.
+      doc: Lightning integration half-window (minutes).
     lightning_platforms:
       type:
       - 'null'
@@ -336,28 +326,28 @@ $graph:
       - GOES-18
       - GOES-19
       label: Lightning platforms
-      doc: Lightning platforms to include in processing.
+      doc: Lightning platforms to include.
     distance_threshold_km:
       type: float?
       default: 5.0
       label: Distance threshold
-      doc: Distance threshold from CPR track in kilometers.
+      doc: CPR track distance threshold (km).
     time_threshold_s:
       type: int?
       default: 300
       label: Time threshold
-      doc: Temporal threshold from CPR acquisition in seconds.
+      doc: CPR acquisition time threshold (seconds).
   outputs:
     log_dir_out:
       type: Directory?
       outputSource: lightning2ec/log_dir_out
       label: Collocation log directory
-      doc: Directory containing monthly processing logs from collocation.
+      doc: Monthly processing logs.
     stac_dir:
       type: Directory
       outputSource: create_stac_catalogue/stac_dir
       label: STAC catalogue directory
-      doc: STAC catalogue directory containing catalog metadata and items.
+      doc: STAC catalogue and items.
   steps:
     lightning2ec:
       run: '#lightning2ec'
@@ -411,8 +401,7 @@ $graph:
   s:hasPart:
   - s:identifier: cluster_1
     s:name: CLI root entrypoint
-    s:description: Define the top-level Click group command for the Lightning2EarthCARE pipeline
-      CLI.
+    s:description: Expose workflow commands.
 $namespaces:
   s: https://schema.org/
 $schemas:

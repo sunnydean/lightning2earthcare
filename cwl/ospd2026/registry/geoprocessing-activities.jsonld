@@ -16,42 +16,42 @@
     {"id": "#contributor", "prov:agent": {"id": "https://github.com/sunnydean"}, "prov:hadRole": {"id": "https://def.isotc211.org/codeset/RoleCode/contributor"}},
     {
       "id": "#collocation", "type": ["skos:Concept", "ospd:GeoprocessingActivity"],
-      "label": "Spatiotemporal observation collocation",
-      "definition": "Retrieve, cluster, parallax-correct and collocate sensor observations, producing matched observations and track summaries.",
+      "label": "Multi-sensor observation matching",
+      "definition": "Match observations from different sensors by location and acquisition time, accounting for viewing-geometry offsets where needed.",
       "prov:wasDerivedFrom": {"id": "../annotations.ttl#cluster_3"},
       "skos:relatedMatch": {"id": "http://ospd/demo/GA047"},
-      "skos:scopeNote": "Data Acquisition covers a related retrieval component; its connector/indexing scope does not describe collocation.",
+      "skos:scopeNote": "Lightning2EarthCARE retrieves and groups lightning observations, applies parallax correction and matches them to EarthCARE observations with along-track counts. Data Acquisition covers the retrieval component, not the matching operation.",
       "skos:inScheme": {"id": ""}, "ex:qualifiedStatus": {"id": "#draftStatus"}, "prov:qualifiedAttribution": {"id": "#contributor"}
     },
     {
       "id": "#aggregation", "type": ["skos:Concept", "ospd:GeoprocessingActivity"],
-      "label": "Storm property summarisation",
-      "definition": "Extract storm properties and along-track statistics from collocated observations.",
+      "label": "Storm characterisation",
+      "definition": "Estimate storm location, extent, duration, movement and lightning activity from grouped observations and satellite-track measurements.",
       "prov:wasDerivedFrom": {"id": "../annotations.ttl#cluster_4"},
       "skos:inScheme": {"id": ""}, "ex:qualifiedStatus": {"id": "#draftStatus"}, "prov:qualifiedAttribution": {"id": "#contributor"}
     },
     {
       "id": "#selection", "type": ["skos:Concept", "ospd:GeoprocessingActivity"],
-      "label": "Spatiotemporal observation selection",
-      "definition": "Select observation sources through date-range queries and catalogue lookups.",
+      "label": "Satellite observation discovery",
+      "definition": "Find satellite observations and sensor sources that meet time, geographic coverage and product requirements.",
       "prov:wasDerivedFrom": {"id": "../annotations.ttl#cluster_6"},
       "skos:relatedMatch": {"id": "http://ospd/demo/GA020"},
-      "skos:scopeNote": "Selection facet of a mixed orchestration cluster. Filter geometries concerns geometric objects, not the full source-selection operation.",
+      "skos:scopeNote": "Covers catalogue queries and sensor-source selection within the orchestration group. Filter geometries addresses geometric filtering, not the combined time, product and sensor-coverage criteria.",
       "skos:inScheme": {"id": ""}, "ex:qualifiedStatus": {"id": "#draftStatus"}, "prov:qualifiedAttribution": {"id": "#contributor"}
     },
     {
       "id": "#conversion", "type": ["skos:Concept", "ospd:GeoprocessingActivity"],
-      "label": "Geospatial tabular conversion",
-      "definition": "Transform scientific datasets and associated catalogue records into structured geospatial tables.",
+      "label": "Geospatial feature construction",
+      "definition": "Construct geospatial features from observation coordinates, associating measurements, times and identifiers.",
       "prov:wasDerivedFrom": {"id": "../annotations.ttl#cluster_7"},
       "skos:relatedMatch": {"id": "http://ospd/demo/GA044"},
-      "skos:scopeNote": "Field Normalization covers related field harmonisation; it does not describe the full dataset-to-GeoParquet conversion.",
+      "skos:scopeNote": "Lightning2EarthCARE builds point geometries and attribute tables from NetCDF observations and storm records, then writes GeoParquet. Field Normalization covers attribute harmonisation, not feature construction.",
       "skos:inScheme": {"id": ""}, "ex:qualifiedStatus": {"id": "#draftStatus"}, "prov:qualifiedAttribution": {"id": "#contributor"}
     },
     {
       "id": "#stac", "type": ["skos:Concept", "ospd:GeoprocessingActivity"],
-      "label": "STAC item generation",
-      "definition": "Extract scientific-dataset metadata and create STAC item records linking data assets.",
+      "label": "Spatiotemporal dataset cataloguing",
+      "definition": "Describe datasets by geographic extent, observation period and measured variables, linking each record to its data assets.",
       "prov:wasDerivedFrom": {"id": "../annotations.ttl#cluster_9"},
       "skos:inScheme": {"id": ""}, "ex:qualifiedStatus": {"id": "#draftStatus"}, "prov:qualifiedAttribution": {"id": "#contributor"}
     }

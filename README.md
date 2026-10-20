@@ -2,6 +2,33 @@
 
 **Lightning2EarthCARE** is a workflow for collocating **EarthCARE satellite observations** with **satellite lightning measurements** and building a catalogue of lightning storms observed during EarthCARE overpasses.
 
+## Run with CWL
+
+Run from the repository root with cwltool, Podman and your [credentials](lightning2ec/README.md#credentials). Both examples run the full workflow without provenance.
+
+By date (one day, frame A and MTG-I1 only; may include multiple orbits):
+
+```bash
+cwltool --podman --outdir cwl/results-small \
+  'cwl/package.cwl#main' \
+  --credentials_file credentials.txt \
+  --start_date 2025-07-31 \
+  --end_date 2025-07-31 \
+  --frames A \
+  --lightning_platforms MTG-I1 \
+  --half_window_minutes 10
+```
+
+With the example MSI/CPR items in [cwl/earthcare](cwl/earthcare), using [cwl/job.yml](cwl/job.yml):
+
+```bash
+cwltool --podman --outdir cwl/results-items \
+  'cwl/package.cwl#main' \
+  cwl/job.yml
+```
+
+See the [cwltool command-line reference](https://cwltool.readthedocs.io/en/latest/cli.html) for runner options.
+
 The repository contains four main components:
 
 ## lightning2ec

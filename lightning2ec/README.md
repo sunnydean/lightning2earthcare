@@ -69,6 +69,20 @@ OFFLINE_TOKEN=your_earthcare_longlasting_token_here
 - Ensure there are no trailing spaces or extra characters.
 - Keep this file private and do not commit it to GitHub.
 
+### Environment variables
+
+Alternatively, export all five values before running the local CLI:
+
+```bash
+export EUMETSAT_KEY='your_eumetsat_key_here'
+export EUMETSAT_SECRET='your_eumetsat_secret_here'
+export CLIENT_ID='offline-token'
+export CLIENT_SECRET='p1eL7uonXs6MDxtGbgKdPVRAmnGxHpVE'
+export OFFLINE_TOKEN='your_earthcare_longlasting_token_here'
+```
+
+Set all five together; if any is set, the credentials file is not read. The [CWL examples](../README.md#run-with-cwl) use the `credentials_file` input instead.
+
 ### EarthCARE access token
 
 The pipeline uses a **90-day offline token** to obtain temporary access tokens for the MAAP API.
@@ -80,12 +94,16 @@ Then generate an offline token here: https://portal.maap.eo.esa.int/ini/services
 Place the generated value in the OFFLINE_TOKEN field of credentials.txt.
 The offline token is valid for 90 days and must be renewed after it expires.
 
+See the [ESA EarthCARE authentication example](https://catalog.maap.eo.esa.int/doc/examples/ESAMAAP_ecdataaccess.html#token) for token usage and the shared `CLIENT_ID` and `CLIENT_SECRET` values above.
+
 ### EUMETSAT Data Store credentials
 
 Create a EUMETSAT account to access the Data Store:
 https://user.eumetsat.int/cas/login
 
 Place the generated Data Store API credentials in the EUMETSAT_KEY and EUMETSAT_SECRET fields of credentials.txt.
+
+Retrieve your **Consumer key** and **Consumer secret** on the [API Key Management page](https://api.eumetsat.int/api-key/). See the [EUMDAC guide](https://user.eumetsat.int/resources/user-guides/eumetsat-data-access-client-eumdac-guide) for setup and authentication instructions.
 
 ## Usage
 

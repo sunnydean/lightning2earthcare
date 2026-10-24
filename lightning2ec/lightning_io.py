@@ -152,8 +152,13 @@ def download_li(
                         continue
 
                     # Download data if missing
-                    with out_path.open('wb') as dst:
-                        shutil.copyfileobj(src, dst)
+                    part_path = out_path.with_name(out_path.name + '.part')
+                    try:
+                        with part_path.open('wb') as dst:
+                            shutil.copyfileobj(src, dst)
+                        part_path.replace(out_path)
+                    finally:
+                        part_path.unlink(missing_ok=True)
                     logger.info(f"Downloaded {out_path.name}")
                     downloaded_files.append(out_path)
 

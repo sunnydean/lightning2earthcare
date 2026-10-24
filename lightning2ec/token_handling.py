@@ -1,10 +1,30 @@
 from pathlib import Path
 import os
 import requests
-from eumdac import AccessToken, DataStore
+from eumdac import AccessToken, DataStore, request as eumdac_request
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 
 # Path to credentials.txt; assumes it is one directory above the lightning2ec package
 CREDENTIALS_FILE = Path(__file__).resolve().parent.parent / "credentials.txt"
+
+
+def _eumdac_request(method, url, max_retries=3, backoff_factor=0.3, **kwargs):
+    kwargs.setdefault("timeout", (20, 60))
+    retries = Retry(
+        total=max_retries, backoff_factor=backoff_factor,
+        status_forcelist=(429, 500, 502, 503, 504), allowed_methods=("GET", "POST"),
+        respect_retry_after_header=False, raise_on_status=False,
+    )
+    with requests.Session() as session:
+        adapter = HTTPAdapter(max_retries=retries)
+        session.mount("https://", adapter)
+        session.mount("http://", adapter)
+        return session.request(method, url, **kwargs)
+
+
+# EUMDAC 3.0 has no timeout hook and otherwise retries throttling indefinitely.
+eumdac_request._request = _eumdac_request
 
 
 def _load_credentials(file_path=None):
@@ -64,7 +84,7 @@ def get_earthcare_token():
         "scope": "offline_access openid"
     }
 
-    response = requests.post(url, data=data)
+    response = requests.post(url, data=data, timeout=(20, 60))
     response.raise_for_status()
 
     response_json = response.json()

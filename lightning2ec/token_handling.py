@@ -64,7 +64,7 @@ def get_earthcare_token():
         "scope": "offline_access openid"
     }
 
-    response = requests.post(url, data=data)
+    response = requests.post(url, data=data, timeout=(20, 60))
     response.raise_for_status()
 
     response_json = response.json()

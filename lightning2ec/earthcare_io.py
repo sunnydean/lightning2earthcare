@@ -4,6 +4,7 @@ from collections import defaultdict
 from datetime import date, datetime, time as day_time, timezone
 from pathlib import Path
 from typing import List
+import aiohttp
 import fsspec
 import xarray as xr
 from pystac_client import Client
@@ -86,13 +87,17 @@ def fetch_earthcare_data(ds_url, group="ScienceData", retries=5, delay=10):
 
     logger.info(f"Opening remote EarthCARE dataset via HTTPS: {ds_url}")
 
-    token = get_earthcare_token()
-
     last_exception = None
+    client_timeout = aiohttp.ClientTimeout(total=300, sock_read=60, connect=20)
 
     for attempt in range(1, retries + 1):
         try:
-            fs = fsspec.filesystem("https", headers={"Authorization": f"Bearer {token}"})
+            token = get_earthcare_token()
+            fs = fsspec.filesystem(
+                "https",
+                headers={"Authorization": f"Bearer {token}"},
+                client_kwargs={"timeout": client_timeout},
+            )
             with fs.open(ds_url, "rb") as f:
                 ds = xr.open_dataset(f, engine="h5netcdf", group=group)
                 ds.load()

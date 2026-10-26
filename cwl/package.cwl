@@ -402,6 +402,90 @@ $graph:
   - s:identifier: cluster_1
     s:name: CLI root entrypoint
     s:description: Expose workflow commands.
+- class: CommandLineTool
+  id: pipeline
+  label: Lightning2EarthCARE combined tool
+  baseCommand: [/app/entrypoint.sh, bash, run_pipeline.sh]
+  arguments:
+  - {position: -1, valueFrom: '$(inputs.lightning_dir)'}
+  requirements:
+    DockerRequirement: {dockerPull: 'ghcr.io/sunnydean/lightning2earthcare:latest'}
+    EnvVarRequirement:
+      envDef:
+        LIGHTNING2EC_CREDENTIALS_FILE: $(inputs.credentials_file.path)
+        PYTHONPATH: /app
+    NetworkAccess: {networkAccess: true}
+    InitialWorkDirRequirement:
+      listing:
+      - entryname: run_pipeline.sh
+        entry: |
+          #!/bin/bash
+          set -euo pipefail
+          data_dir="$1"
+          shift
+          python -m lightning2ec.cli lightning2ec "$@"
+          python -m lightning2ec.cli create_storm_catalogue \
+            --lightning-groups-dir "$data_dir/lightning_groups" \
+            --track-counts-dir "$data_dir/track_counts" \
+            --output catalogue.json
+          python -m lightning2ec.cli post_process_nc_to_parquet \
+            --catalogue catalogue.json --source-dir "$data_dir" --output-dir parquet
+          python -m lightning2ec.cli create_stac_catalogue \
+            --parquet-dir parquet --source-dir "$data_dir" --output-dir stac
+  inputs:
+    lightning_dir: {type: string, default: collocation_data, inputBinding: {prefix: --lightning-dir}}
+    log_dir: {type: string, default: logs, inputBinding: {prefix: --log-dir}}
+    start_date: {type: string, inputBinding: {prefix: --start-date}}
+    end_date: {type: string, inputBinding: {prefix: --end-date}}
+    earthcare_catalog: {type: 'Directory?', inputBinding: {prefix: --earthcare-catalog}}
+    products:
+      type: ['null', {type: array, items: string, inputBinding: {prefix: --product}}]
+      default: [MSI_COP_2A, CPR_FMR_2A]
+    frames:
+      type: ['null', {type: array, items: string, inputBinding: {prefix: --frame}}]
+      default: [A, B, D, E, F, H]
+    half_window_minutes: {type: 'int?', default: 60, inputBinding: {prefix: --half-window}}
+    lightning_platforms:
+      type: ['null', {type: array, items: string, inputBinding: {prefix: --lightning-platform}}]
+      default: [MTG-I1, GOES-16, GOES-18, GOES-19]
+    distance_threshold_km: {type: 'float?', default: 5.0, inputBinding: {prefix: --distance-threshold}}
+    time_threshold_s: {type: 'int?', default: 300, inputBinding: {prefix: --time-threshold}}
+    credentials_file: {type: File}
+  outputs:
+    log_dir_out: {type: 'Directory?', outputBinding: {glob: '$(inputs.log_dir)'}}
+    stac_dir: {type: Directory, outputBinding: {glob: stac}}
+- class: Workflow
+  id: combined
+  label: Lightning2EarthCARE combined workflow
+  inputs:
+    start_date: {type: string}
+    end_date: {type: string}
+    credentials_file: {type: File}
+    earthcare_catalog: {type: 'Directory?'}
+    products: {type: ['null', {type: array, items: string}], default: [MSI_COP_2A, CPR_FMR_2A]}
+    frames: {type: ['null', {type: array, items: string}], default: [A, B, D, E, F, H]}
+    half_window_minutes: {type: 'int?', default: 60}
+    lightning_platforms: {type: ['null', {type: array, items: string}], default: [MTG-I1, GOES-16, GOES-18, GOES-19]}
+    distance_threshold_km: {type: 'float?', default: 5.0}
+    time_threshold_s: {type: 'int?', default: 300}
+  outputs:
+    log_dir_out: {type: 'Directory?', outputSource: pipeline/log_dir_out}
+    stac_dir: {type: Directory, outputSource: pipeline/stac_dir}
+  steps:
+    pipeline:
+      run: '#pipeline'
+      in:
+        start_date: start_date
+        end_date: end_date
+        credentials_file: credentials_file
+        earthcare_catalog: earthcare_catalog
+        products: products
+        frames: frames
+        half_window_minutes: half_window_minutes
+        lightning_platforms: lightning_platforms
+        distance_threshold_km: distance_threshold_km
+        time_threshold_s: time_threshold_s
+      out: [log_dir_out, stac_dir]
 $namespaces:
   s: https://schema.org/
 $schemas:

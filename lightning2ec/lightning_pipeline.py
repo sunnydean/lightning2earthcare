@@ -142,6 +142,8 @@ def process_one_source(
             write_track_netcdf(track_counts_ds, lightning_dir, orbit_frame, close_count, source_label=source_key, platform=platform)
         del output_ds, track_counts_ds
 
+    except Exception as e:
+        logger.error(f"[{orbit_frame}/{source_key}/{platform}] processing failed: {e}")
     finally:
         gc.collect()
 

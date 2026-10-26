@@ -42,7 +42,7 @@ def query_catalogue(
     Query ESA MAAP STAC catalogue for specified products, frames, and date range.
     Returns a list of pystac.Items.
     """
-    client = Client.open(catalog_url)
+    client = Client.open(catalog_url, timeout=(20, 60))
     datetime_str = [f"{start_date.strftime('%Y-%m-%dT00:00:00Z')}",
             f"{end_date.strftime('%Y-%m-%dT23:59:59Z')}"] if start_date and end_date else None
 

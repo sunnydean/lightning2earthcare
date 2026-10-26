@@ -31,6 +31,12 @@ For a single-step version, use `#combined` in place of `#main` in the same
 CWL package. It runs all four commands in one container with the same inputs
 and outputs.
 
+```bash
+cwltool --podman --outdir cwl/results-items \
+  'cwl/package.cwl#combined' \
+  cwl/job.yml
+```
+
 See the [cwltool command-line reference](https://cwltool.readthedocs.io/en/latest/cli.html) for runner options.
 
 The repository contains four main components:

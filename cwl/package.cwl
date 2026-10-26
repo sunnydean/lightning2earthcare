@@ -405,9 +405,7 @@ $graph:
 - class: CommandLineTool
   id: pipeline
   label: Lightning2EarthCARE combined tool
-  baseCommand: [/app/entrypoint.sh, bash, run_pipeline.sh]
-  arguments:
-  - {position: -1, valueFrom: '$(inputs.lightning_dir)'}
+  baseCommand: [combined]
   requirements:
     DockerRequirement: {dockerPull: 'ghcr.io/sunnydean/lightning2earthcare:latest'}
     EnvVarRequirement:
@@ -415,23 +413,6 @@ $graph:
         LIGHTNING2EC_CREDENTIALS_FILE: $(inputs.credentials_file.path)
         PYTHONPATH: /app
     NetworkAccess: {networkAccess: true}
-    InitialWorkDirRequirement:
-      listing:
-      - entryname: run_pipeline.sh
-        entry: |
-          #!/bin/bash
-          set -euo pipefail
-          data_dir="$1"
-          shift
-          python -m lightning2ec.cli lightning2ec "$@"
-          python -m lightning2ec.cli create_storm_catalogue \
-            --lightning-groups-dir "$data_dir/lightning_groups" \
-            --track-counts-dir "$data_dir/track_counts" \
-            --output catalogue.json
-          python -m lightning2ec.cli post_process_nc_to_parquet \
-            --catalogue catalogue.json --source-dir "$data_dir" --output-dir parquet
-          python -m lightning2ec.cli create_stac_catalogue \
-            --parquet-dir parquet --source-dir "$data_dir" --output-dir stac
   inputs:
     lightning_dir: {type: string, default: collocation_data, inputBinding: {prefix: --lightning-dir}}
     log_dir: {type: string, default: logs, inputBinding: {prefix: --log-dir}}

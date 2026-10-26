@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 
 import click
 
@@ -114,6 +115,24 @@ def run_pipeline(
     )
 
 
+@click.command('combined', params=run_pipeline.params)
+@click.pass_context
+def run_combined(ctx, **kwargs):
+    """Run collocation, storm catalogue creation, Parquet conversion and STAC generation."""
+    ctx.invoke(run_pipeline, **kwargs)
+    source_dir = Path(kwargs['lightning_base_path'])
+    ctx.invoke(create_storm_catalogue,
+               lightning_groups_dir=source_dir / 'lightning_groups',
+               track_counts_dir=source_dir / 'track_counts',
+               out_file=Path('catalogue.json'))
+    ctx.invoke(post_process_nc_to_parquet,
+               json_file_path=Path('catalogue.json'), source_dir=source_dir,
+               output_dir=Path('parquet'))
+    ctx.invoke(create_stac_catalogue,
+               parquet_dir=Path('parquet'), source_dir=source_dir,
+               output_dir=Path('stac'))
+
+
 @click.group()
 def main():
     """Run lightning collocation, storm catalogue creation, Parquet conversion and STAC generation."""
@@ -123,6 +142,7 @@ main.add_command(run_pipeline, name='lightning2ec')
 main.add_command(create_storm_catalogue, name='create_storm_catalogue')
 main.add_command(post_process_nc_to_parquet, name='post_process_nc_to_parquet')
 main.add_command(create_stac_catalogue, name='create_stac_catalogue')
+main.add_command(run_combined)
 
 
 if __name__ == "__main__":
